@@ -4,4 +4,5 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .env
+.DS_Store
 traces/live_*.jsonl

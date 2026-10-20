@@ -6,16 +6,24 @@ can act on when something goes wrong; it goes back to the model as a result.
 """
 
 import json
+import re
 import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 import os
+from html import unescape
+from pathlib import Path
 
 from agentbook import Tool, ToolError  # noqa: F401  (ToolError is for your tools)
 from agentbook.registry import STATUS, default_registry  # noqa: F401
 
 NCBI_EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+PMC_IDCONV_API = "https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/"
+BACDIVE_API = "https://api.bacdive.dsmz.de/v2"
+CROSSREF_API = "https://api.crossref.org/works"
+UNPAYWALL_API = "https://api.unpaywall.org/v2"
+MEDIA_RECORDS_DIR = Path(__file__).resolve().parents[1] / "data" / "strain_media"
 
 
 def _ncbi_get(endpoint: str, **params) -> str:
@@ -80,6 +88,342 @@ def get_ncbi_strain_names(prokaryote_name: str, max_results: int = 5) -> dict:
     }
 
 
+def _bacdive_get(path_or_url: str) -> dict:
+    """GET one BacDive v2 endpoint (relative path, or the full `next` URL it returns
+    for pagination). Raises ToolError on any failure."""
+    url = path_or_url if path_or_url.startswith("http") else f"{BACDIVE_API}/{path_or_url}"
+    try:
+        with urllib.request.urlopen(url, timeout=20) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code == 429:
+            raise ToolError("BacDive rate-limited this request (HTTP 429). Wait a moment "
+                            "and retry.") from e
+        raise ToolError(f"BacDive returned HTTP {e.code} for {path_or_url!r}.") from e
+    except urllib.error.URLError as e:
+        raise ToolError(f"Could not reach the BacDive API ({e.reason}). Check network "
+                        "access and retry.") from e
+
+
+def _ncbi_taxids(record: dict) -> list[dict]:
+    """The record's NCBI tax id entries, normalized to a list of
+    {'NCBI tax id': ..., 'Matching level': 'species'|'strain'}."""
+    entry = (record.get("General") or {}).get("NCBI tax id")
+    if entry is None:
+        return []
+    return entry if isinstance(entry, list) else [entry]
+
+
+def _collect_bacdive_ids(first_page: dict, limit: int) -> list[int]:
+    """Page through a BacDive taxon search ('next' is a full URL) up to `limit` ids."""
+    ids, page = [], first_page
+    while True:
+        ids.extend(page.get("results") or [])
+        if len(ids) >= limit or not page.get("next"):
+            break
+        page = _bacdive_get(page["next"])
+    return ids[:limit]
+
+
+def get_bacdive_details(scientific_name: str, ncbi_taxid: str | None = None,
+                        max_results: int = 50) -> dict:
+    """Search BacDive by taxonomic name, fetch full records, and -- if `ncbi_taxid` is
+    given -- keep only the record(s) whose NCBI mapping includes that id (species- or
+    strain-level). Returns each match's BacDive ID, its NCBI tax id entries, and the
+    complete record (General, Morphology, Culture and growth conditions, Physiology
+    and metabolism, Sequence information, Genome-based predictions, etc.)."""
+    parts = [p for p in scientific_name.strip().split() if p.lower() != "subsp."]
+    if not parts or len(parts) > 3:
+        raise ToolError(f"'{scientific_name}' should be 1-3 taxonomic units: genus, "
+                        "optionally species epithet, optionally subspecies (e.g. "
+                        "'Escherichia coli'). A strain designation like 'K-12' or 'W' "
+                        "won't match here -- use ncbi_taxid to narrow to a strain instead.")
+    path = "/".join(urllib.parse.quote(p, safe="") for p in parts)
+    search = _bacdive_get(f"taxon/{path}")
+    if "count" not in search:
+        raise ToolError(f"BacDive search failed for '{scientific_name}': "
+                        f"{search.get('message') or search.get('title') or search}")
+    if search["count"] == 0:
+        raise ToolError(f"No BacDive records found for '{scientific_name}'. Try just the "
+                        "genus, or check the spelling.")
+
+    ids = _collect_bacdive_ids(search, max_results)
+    fetched = _bacdive_get("fetch/" + ";".join(str(i) for i in ids))
+    results = fetched.get("results") or {}
+    records = list(results.values()) if isinstance(results, dict) else list(results)
+    strains = [{"bacdive_id": (r.get("General") or {}).get("BacDive-ID"),
+               "ncbi_tax_ids": _ncbi_taxids(r), "record": r} for r in records]
+
+    if ncbi_taxid is not None:
+        matched = [s for s in strains if any(str(t.get("NCBI tax id")) == str(ncbi_taxid)
+                                             for t in s["ncbi_tax_ids"])]
+        if not matched:
+            raise ToolError(f"None of the {len(strains)} BacDive records fetched for "
+                            f"'{scientific_name}' matched NCBI tax id {ncbi_taxid} (out of "
+                            f"{search['count']} total hits). Retry with a higher max_results "
+                            "to search further down the list, or omit ncbi_taxid to see all "
+                            "fetched records' tax ids.")
+        strains = matched
+    return {"query": {"scientific_name": scientific_name, "ncbi_taxid": ncbi_taxid},
+            "total_found": search["count"], "returned": len(strains), "strains": strains}
+
+
+def _fetch_bacdive_record(bacdive_id: int | str) -> dict:
+    """Fetch one full BacDive record by its BacDive-ID, re-fetching rather than trusting
+    a record passed in from an earlier step (tool results only round-trip as text)."""
+    fetched = _bacdive_get(f"fetch/{bacdive_id}")
+    results = fetched.get("results") or {}
+    record = results.get(str(bacdive_id)) if isinstance(results, dict) else (
+        results[0] if results else None)
+    if not record:
+        raise ToolError(f"BacDive-ID {bacdive_id} was not found.")
+    return record
+
+
+def _is_type_strain(record: dict) -> bool:
+    tax = record.get("Name and taxonomic classification") or {}
+    tax = tax[0] if isinstance(tax, list) else tax
+    return str((tax or {}).get("type strain", "")).strip().lower() == "yes"
+
+
+def pick_top_bacdive_strain(prokaryote_name: str, max_results: int = 50) -> dict:
+    """Resolve a prokaryote name all the way to ONE BacDive strain: look it up in NCBI
+    Taxonomy, search BacDive for that species, and pick a single record -- preferring one
+    whose NCBI mapping matches the resolved NCBI tax id, then the type strain, then the
+    lowest BacDive-ID (for a deterministic pick among equally good candidates). Feed the
+    returned bacdive_id into get_bacdive_carbon_source_growth or get_bacdive_reference_text."""
+    ncbi = get_ncbi_strain_names(prokaryote_name, max_results=1)
+    taxon = ncbi["taxa"][0]
+    ncbi_taxid, scientific_name = taxon["ncbi_taxid"], taxon["scientific_name"]
+    # BacDive's taxon search takes genus [+ species epithet], not a strain suffix.
+    species_name = " ".join(scientific_name.split()[:2])
+
+    ncbi_taxid_matched = True
+    try:
+        bd = get_bacdive_details(species_name, ncbi_taxid=ncbi_taxid, max_results=max_results)
+    except ToolError:
+        ncbi_taxid_matched = False
+        bd = get_bacdive_details(species_name, max_results=max_results)
+
+    type_strains = [s for s in bd["strains"] if _is_type_strain(s["record"])]
+    pool = type_strains or bd["strains"]
+    top = min(pool, key=lambda s: s["bacdive_id"])
+
+    result = {
+        "prokaryote_name": prokaryote_name,
+        "ncbi_taxid": ncbi_taxid,
+        "scientific_name": scientific_name,
+        "bacdive_id": top["bacdive_id"],
+        "ncbi_tax_ids": top["ncbi_tax_ids"],
+        "is_type_strain": _is_type_strain(top["record"]),
+        "ncbi_taxid_matched": ncbi_taxid_matched,
+        "candidates_considered": bd["returned"],
+        "total_bacdive_hits": bd["total_found"],
+    }
+    if not type_strains and bd["returned"] < bd["total_found"]:
+        result["note"] = (
+            f"No type strain found among the {bd['returned']} of {bd['total_found']} candidates "
+            "scanned (BacDive pages by ascending BacDive-ID, not by relevance), so this pick is "
+            "just the lowest-ID candidate in that window, not necessarily the type strain or the "
+            "'best' one. Re-run with a higher max_results if the type strain specifically matters.")
+    return result
+
+
+def get_bacdive_carbon_source_growth(bacdive_id: int) -> dict:
+    """Return one BacDive strain's carbon-source utilization tests only: each tested
+    metabolite, its Chebi-ID, whether it supported growth (+ -> true), and the `ref` id
+    of the source backing it -- pass that ref id and metabolite name to
+    save_carbon_source_media_record to track down and save the medium behind it."""
+    record = _fetch_bacdive_record(bacdive_id)
+    phys = record.get("Physiology and metabolism") or {}
+    entries = phys.get("metabolite utilization") or []
+    if isinstance(entries, dict):
+        entries = [entries]
+    if not entries:
+        raise ToolError(f"BacDive-ID {bacdive_id} has no metabolite utilization data at all.")
+    tests = [
+        {"metabolite": e.get("metabolite"), "chebi_id": e.get("Chebi-ID"),
+         "growth": e.get("utilization activity") == "+",
+         "utilization_activity": e.get("utilization activity"), "ref": e.get("@ref")}
+        for e in entries if e.get("kind of utilization tested") == "carbon source"
+    ]
+    if not tests:
+        kinds_present = sorted({e.get("kind of utilization tested") for e in entries})
+        raise ToolError(f"BacDive-ID {bacdive_id} has no 'carbon source' utilization tests "
+                        f"(only: {', '.join(kinds_present)}).")
+    return {"bacdive_id": bacdive_id, "n_tests": len(tests), "tests": tests}
+
+
+def _strip_html(html: str) -> str:
+    """Rough HTML -> text: drop script/style blocks and tags, unescape entities, collapse
+    whitespace. Not a real parser -- good enough to read prose, not tables or figures."""
+    html = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html)
+    text = unescape(re.sub(r"(?s)<[^>]+>", " ", html))
+    return re.sub(r"[ \t]+", " ", text).strip()
+
+
+def _fetch_json_quiet(url: str) -> dict | None:
+    """GET JSON from a best-effort enrichment API (Crossref/Unpaywall); None on any failure
+    so a down/slow third-party service degrades the result instead of failing the tool."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "genoscape-agentbook-tool"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception:
+        return None
+
+
+def _fetch_bytes(url: str) -> tuple[str | None, bytes | None]:
+    """GET raw bytes and the Content-Type of a (possibly paywalled or blocked) URL.
+    (None, None) on any failure rather than raising, since the caller still has metadata."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (genoscape-agentbook)"})
+        with urllib.request.urlopen(req, timeout=25) as resp:
+            return resp.headers.get("Content-Type"), resp.read()
+    except Exception:
+        return None, None
+
+
+def _pdf_text(data: bytes, max_pages: int = 40) -> str:
+    try:
+        import pypdf
+    except ImportError:
+        return "[PDF content: install pypdf (`pip install pypdf`) to extract its text.]"
+    import io
+    reader = pypdf.PdfReader(io.BytesIO(data))
+    text = "\n".join((page.extract_text() or "") for page in reader.pages[:max_pages])
+    return text.strip() or "[PDF had no extractable text layer (likely a scanned image).]"
+
+
+def _idconv(doi: str) -> dict:
+    """DOI -> {'pmcid', 'pmid'} via NCBI's ID Converter, or {} if the DOI isn't in PMC."""
+    params = {"ids": doi, "format": "json", "tool": "genoscape_agentbook"}
+    if os.environ.get("NCBI_API_KEY"):
+        params["api_key"] = os.environ["NCBI_API_KEY"]
+    url = f"{PMC_IDCONV_API}?{urllib.parse.urlencode(params)}"
+    try:
+        with urllib.request.urlopen(url, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.HTTPError, urllib.error.URLError):
+        return {}
+    record = (data.get("records") or [{}])[0]
+    if record.get("status") == "error" or not record.get("pmcid"):
+        return {}
+    return {"pmcid": record["pmcid"], "pmid": record.get("pmid")}
+
+
+def get_pubmed_reference_text(doi: str) -> dict:
+    """Resolve a DOI to its full text in PubMed Central, if it's in the PMC Open Access /
+    author-manuscript set. Converts the DOI to a PMCID via NCBI's ID Converter, then
+    fetches and flattens the JATS XML body via efetch (db=pmc). Returns `text` empty with
+    `status` explaining why when the DOI has no PMCID -- true for most paywalled or
+    non-PMC-deposited articles -- in which case get_bacdive_reference_text's
+    Crossref/Unpaywall/direct-fetch path is the fallback."""
+    ids = _idconv(doi)
+    if not ids.get("pmcid"):
+        return {"doi": doi, "pmcid": None, "pmid": None, "text": "",
+                "status": "This DOI has no PMCID: the article is not deposited in PubMed "
+                         "Central, so its full text is not available this way."}
+    xml_text = _ncbi_get("efetch", db="pmc", id=ids["pmcid"], rettype="full", retmode="xml")
+    root = ET.fromstring(xml_text)
+    body = root.find(".//body")
+    text = ""
+    if body is not None:
+        text = re.sub(r"\s+", " ", " ".join(t.strip() for t in body.itertext() if t.strip())).strip()
+    return {
+        "doi": doi, "pmcid": ids["pmcid"], "pmid": ids.get("pmid"), "text": text[:20000],
+        "status": "ok" if text else "PMCID found but its XML had no <body> text (front-matter-only stub).",
+    }
+
+
+def get_bacdive_reference_text(bacdive_id: int, ref_id: int) -> dict:
+    """Fetch the text behind one of a BacDive record's literature references (its `@ref` /
+    `@id`), to read the primary source behind a BacDive-curated fact -- e.g. the exact
+    media recipe a growth claim came from. For a DOI reference: pulls title/abstract from
+    Crossref, and (if the UNPAYWALL_EMAIL environment variable is set to a real contact
+    email) looks up an open-access copy via Unpaywall; otherwise fetches the DOI's landing
+    page directly. For a plain URL reference: fetches that page directly. Only open or
+    otherwise unrestricted pages can actually be read -- a paywalled paper comes back as
+    title/abstract only, with `text` empty or sparse; check `status`/`open_access`."""
+    record = _fetch_bacdive_record(bacdive_id)
+    refs = record.get("Reference") or []
+    if isinstance(refs, dict):
+        refs = [refs]
+    ref = next((r for r in refs if r.get("@id") == ref_id), None)
+    if ref is None:
+        raise ToolError(f"BacDive-ID {bacdive_id} has no reference @id={ref_id}. Available "
+                        f"ref ids: {sorted(r.get('@id') for r in refs)}.")
+
+    location = (ref.get("doi/url") or "").strip()
+    result = {"bacdive_id": bacdive_id, "ref_id": ref_id, "authors": ref.get("authors"),
+              "title": ref.get("title"), "doi_or_url": location or None}
+    if not location:
+        result.update(status="This reference has no doi/url on record; nothing to fetch.", text="")
+        return result
+
+    if location.startswith("http"):
+        fetch_url = location
+    else:
+        doi = location
+        result["doi"] = doi
+        crossref = _fetch_json_quiet(f"{CROSSREF_API}/{urllib.parse.quote(doi)}")
+        if crossref:
+            msg = crossref.get("message", {})
+            result["crossref_title"] = (msg.get("title") or [None])[0]
+            if msg.get("abstract"):
+                result["abstract"] = _strip_html(msg["abstract"])
+        fetch_url = f"https://doi.org/{doi}"
+        email = os.environ.get("UNPAYWALL_EMAIL")
+        if email:
+            oa = _fetch_json_quiet(f"{UNPAYWALL_API}/{doi}?email={urllib.parse.quote(email)}")
+            best = (oa or {}).get("best_oa_location") or {}
+            fetch_url = best.get("url_for_pdf") or best.get("url") or fetch_url
+            result["open_access"] = bool(oa and oa.get("is_oa"))
+        else:
+            result["open_access"] = None
+            result["note"] = "Set UNPAYWALL_EMAIL (a real contact email) to also check for an open-access copy."
+
+    content_type, body = _fetch_bytes(fetch_url)
+    result["fetched_from"] = fetch_url
+    if not body:
+        result["text"] = ""
+        result["status"] = "Could not fetch this URL; only the metadata above is available."
+    elif content_type and "pdf" in content_type.lower():
+        result["content_type"] = "pdf"
+        result["text"] = _pdf_text(body)
+    else:
+        result["content_type"] = content_type or "text/html"
+        result["text"] = _strip_html(body.decode("utf-8", "ignore"))[:12000]
+    return result
+
+
+_MEDIA_UNIT_RE = re.compile(
+    r"\b\d+(?:\.\d+)?\s?(?:n?[mM]?g|m?[lL]|%|m[mM]|[mM]ol|[mM]M)\b")
+_MEDIA_KEYWORDS = ("agar", "broth", "medium", "media", "peptone", "yeast extract", "nacl",
+                  "glucose", "buffer", " ph ", "autoclave", "distilled water", "sterile",
+                  "supplement", "incubat", "extract", "casein", "tryptone")
+
+
+def extract_media_composition_candidates(text: str, max_lines: int = 40) -> dict:
+    """Scan free text (typically the `text` from get_bacdive_reference_text) for lines
+    that look like culture-medium composition: a quantity-with-unit together with a
+    media-related keyword. This is a deterministic keyword filter, NOT language
+    understanding -- it will miss ingredients phrased unusually and can include an
+    unrelated line that happens to match both patterns. Review the candidates (and the
+    surrounding text) before treating them as the exact recipe. If the BacDive record
+    itself already has a 'culture medium' / 'composition' field (get_bacdive_details or
+    get_bacdive_carbon_source_growth's bacdive_id), prefer that structured source over
+    this heuristic text scan."""
+    candidates = [line.strip() for line in text.splitlines() if line.strip()
+                 and _MEDIA_UNIT_RE.search(line) and any(k in line.lower() for k in _MEDIA_KEYWORDS)]
+    if not candidates:
+        raise ToolError("No lines matched both a quantity+unit and a media-related keyword. "
+                        "The recipe may be in a table/figure that didn't survive text "
+                        "extraction, or phrased differently -- try reading the full text, or "
+                        "check the BacDive record's own 'culture medium' field first.")
+    return {"n_candidates": len(candidates), "candidate_lines": candidates[:max_lines]}
+
+
 MY_TOOLS: list[Tool] = [
     Tool(
         "get_ncbi_strain_names",
@@ -96,5 +440,86 @@ MY_TOOLS: list[Tool] = [
             "max_results": {"type": "integer", "minimum": 1, "maximum": 20, "default": 5}},
          "required": ["prokaryote_name"], "additionalProperties": False},
         get_ncbi_strain_names,
+    ),
+    Tool(
+        "get_bacdive_details",
+        "Resolve a prokaryote to its BacDive record(s). Searches BacDive by taxonomic name "
+        "(genus, optionally species epithet, optionally subspecies -- NOT a strain "
+        "designation) and returns full records: BacDive ID, NCBI tax id mapping, and all "
+        "sections (morphology, culture/growth conditions, physiology, isolation source, "
+        "sequence info, genome-based predictions, literature). Pass `ncbi_taxid` (e.g. from "
+        "get_ncbi_strain_names) to keep only the record(s) matching that exact NCBI taxon -- "
+        "species- or strain-level. If nothing matches, retry with a higher max_results: "
+        "BacDive pages results by ascending BacDive-ID, so a specific strain may not be in "
+        "the default first 50.",
+        {"type": "object", "properties": {
+            "scientific_name": {"type": "string",
+                               "description": "e.g. 'Escherichia coli' (genus [species [subspecies]])."},
+            "ncbi_taxid": {"type": "string",
+                          "description": "NCBI taxonomy ID to narrow to, e.g. '566546'."},
+            "max_results": {"type": "integer", "minimum": 1, "maximum": 500, "default": 50}},
+         "required": ["scientific_name"], "additionalProperties": False},
+        get_bacdive_details,
+    ),
+    Tool(
+        "pick_top_bacdive_strain",
+        "Resolve a prokaryote name end-to-end to ONE BacDive strain (NCBI Taxonomy lookup "
+        "-> BacDive search -> pick the NCBI-matched / type / lowest-ID record), so you don't "
+        "have to pick among get_bacdive_details's candidates yourself. Returns bacdive_id "
+        "plus the NCBI taxid and scientific name used to get there. Use the returned "
+        "bacdive_id with get_bacdive_carbon_source_growth and get_bacdive_reference_text.",
+        {"type": "object", "properties": {
+            "prokaryote_name": {"type": "string",
+                               "description": "Organism or strain name, e.g. 'Escherichia coli K-12'."},
+            "max_results": {"type": "integer", "minimum": 1, "maximum": 500, "default": 50}},
+         "required": ["prokaryote_name"], "additionalProperties": False},
+        pick_top_bacdive_strain,
+    ),
+    Tool(
+        "get_bacdive_carbon_source_growth",
+        "Return one BacDive strain's carbon-source utilization test results only (not "
+        "energy source, fermentation, or any other kind): each tested metabolite, whether "
+        "it supported growth (true/false from the +/- utilization activity), and the "
+        "reference id the test came from. Pass one entry's metabolite + ref id into "
+        "save_carbon_source_media_record to track down and save the medium behind it. "
+        "Fails if the strain has no carbon-source utilization data -- the error lists "
+        "which other kinds of utilization data it does have, if any.",
+        {"type": "object", "properties": {
+            "bacdive_id": {"type": "integer", "description": "From pick_top_bacdive_strain "
+                           "or get_bacdive_details."}},
+         "required": ["bacdive_id"], "additionalProperties": False},
+        get_bacdive_carbon_source_growth,
+    ),
+    Tool(
+        "get_bacdive_reference_text",
+        "Fetch the text behind one literature reference (`@ref`/`@id`) of a BacDive "
+        "record -- the primary source behind a BacDive-curated fact, e.g. the paper a "
+        "growth or media claim came from. Resolves a DOI via Crossref (title/abstract) and, "
+        "if UNPAYWALL_EMAIL is set, via Unpaywall for an open-access copy; a plain URL "
+        "reference is fetched directly. Only open-access or otherwise unrestricted pages "
+        "can actually be read -- a paywalled paper comes back with title/abstract but an "
+        "empty or sparse `text`, flagged in `status`/`open_access`.",
+        {"type": "object", "properties": {
+            "bacdive_id": {"type": "integer"},
+            "ref_id": {"type": "integer", "description": "A reference '@ref' id, e.g. from "
+                      "get_bacdive_carbon_source_growth's 'ref' field."}},
+         "required": ["bacdive_id", "ref_id"], "additionalProperties": False},
+        get_bacdive_reference_text,
+    ),
+    Tool(
+        "extract_media_composition_candidates",
+        "Scan free text (typically the `text` field from get_bacdive_reference_text) for "
+        "lines that look like culture-medium composition: a quantity+unit alongside a "
+        "media-related keyword (agar, broth, peptone, yeast extract, NaCl, pH, ...). This "
+        "is a deterministic keyword filter, NOT language understanding -- treat the result "
+        "as candidates to verify, not a guaranteed-accurate recipe. Prefer the BacDive "
+        "record's own 'culture medium'/'composition' field (from get_bacdive_details) when "
+        "it's already present; use this only when you need the recipe from the paper "
+        "itself.",
+        {"type": "object", "properties": {
+            "text": {"type": "string"},
+            "max_lines": {"type": "integer", "minimum": 1, "maximum": 200, "default": 40}},
+         "required": ["text"], "additionalProperties": False},
+        extract_media_composition_candidates,
     ),
 ]

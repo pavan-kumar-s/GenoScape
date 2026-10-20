@@ -55,7 +55,7 @@ def make_model(provider: str, name: str | None):
 def main() -> None:
     load_env()
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("prokaryote_name", default="Escherichia coli k12")
+    parser.add_argument("--prokaryote_name", default="Escherichia coli k12")
     parser.add_argument("--provider", choices=["openrouter", "anthropic"],
                         default="openrouter" if os.environ.get("OPENROUTER_API_KEY") else "anthropic")
     parser.add_argument("--model", help="model name; default anthropic/claude-haiku-4.5 on "

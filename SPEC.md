@@ -1,4 +1,3 @@
-```markdown
 # GenoScape, Team GenoScape
 
 
@@ -73,5 +72,3 @@ Repo: https://github.com/pavan-kumar-s/GenoScape
 - **Fallback if you are behind on Tuesday at noon:** Restrict scope to two reliable sources—**Europe PMC API** (abstracts + open-access full text) and **Fitness Browser / BacDive**—.
 - **Limits:** Max 10 agent steps per organism; max 30,000 input tokens per run; expected API spend < $50 total across evaluation runs.
 
-
-```

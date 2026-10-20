@@ -19,15 +19,20 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# DEFAULT_TASK = (
+#     "Exract the growth phenotype data for the following organism: {prokaryote_name}."
+#     "The growth can be qualitative or quantitative."
+#     "You are supposed to get all the records of pertubations made to the genotype (Eg: knockout) and the environment (Eg: media composition, temperature, pH, etc), and the resulting growth phenotype."
+#     "The final output should have three files: Metadata of genotype, metadata of environment, and one parent file"
+# )
+
 DEFAULT_TASK = (
     "Exract the growth phenotype data for the following organism: {prokaryote_name}."
     "The growth can be qualitative or quantitative."
-    "You are supposed to get all the records of pertubations made to the genotype (Eg: knockout) and the environment (Eg: media composition, temperature, pH, etc), and the resulting growth phenotype."
-    "The final output should have three files: Metadata of genotype, metadata of environment, and one parent file"
+    "The final output should be a json file that atleast contain strain_name, carbon source and growth output"
 )
 
-
-DEFAULT_MODELS = {"openrouter": "anthropic/claude-haiku-4.5", "anthropic": "claude-haiku-4.5"}
+DEFAULT_MODELS = {"openrouter": "anthropic/claude-sonnet-4.5", "anthropic": "claude-haiku-4.5"}
 
 
 def load_env(path: Path = ROOT / ".env") -> None:
@@ -61,7 +66,7 @@ def main() -> None:
     parser.add_argument("--model", help="model name; default anthropic/claude-haiku-4.5 on "
                                         "OpenRouter, claude-haiku-4.5 on Anthropic")
     parser.add_argument("--plan", action="store_true", help="add the update_plan tool (plan, act, reflect)")
-    parser.add_argument("--max-steps", type=int, default=5)
+    parser.add_argument("--max-steps", type=int, default=50)
     parser.add_argument("--budget", type=int, default=200_000, help="stop after this many tokens")
     args = parser.parse_args()
     key = "OPENROUTER_API_KEY" if args.provider == "openrouter" else "ANTHROPIC_API_KEY"

@@ -1,100 +1,164 @@
-# AgenticAI2026_Tutorial-1: Building a Tool-Using Agent
+# GenoScape: An Agentic Pipeline for Mining Genotype × Environment → Growth-Phenotype Data from NCBI, BacDive and the Literature
 
-[![tests](https://github.com/ioanazelko/AgenticAI2026_Tutorial-1/actions/workflows/tests.yml/badge.svg)](https://github.com/ioanazelko/AgenticAI2026_Tutorial-1/actions/workflows/tests.yml)
+GenoScape is a tool-using agent that turns a prokaryote's name into structured,
+source-linked growth-phenotype data. Given an organism (e.g. *Escherichia coli*
+K-12), it resolves the strain across NCBI Taxonomy and BacDive, reads off its
+carbon-source utilization tests, tracks down and reads the paper behind each
+test, and extracts the exact growth medium reported there — producing records
+that pair a **genotype** (strain + genome accession) and an **environment**
+(carbon source, growth medium) with an observed **growth phenotype**, each one
+traceable back to its NCBI ID, BacDive ID, and literature reference.
 
-Code for Tutorial 1 of the [Fall School on Agentic AI in Science 2026](https://ai-for-science.org/).
+The goal (see [SPEC.md](SPEC.md)) is to build the kind of dataset an ML/DL
+model would need to predict whether a given microbe can be cultivated in a
+given environment — useful to researchers trying to grow organisms observed in
+the wild but not yet grown in the lab.
 
-A small, readable agent harness: a model adapter, a tool registry, a 24-line
-loop, JSONL traces and checks. The tools work on
-[DarkMatterFM-Registry](https://github.com/ioanazelko/darkmatterfm-registry),
-6,145 machine-extracted model cards of dark-matter models
-([wiki](https://ioanazelko.github.io/darkmatterfm-registry/)). The cards are
-machine-extracted, not expert-verified: use them to find things, not as physics.
+## Why an agent?
 
-Everything except `run_live.py` runs offline with no API key: a scripted
-`FakeModel` stands in for the model, and a 123-card snapshot of the registry
-is bundled in `data/registry_snapshot/`.
+A single API call can't answer "what medium grows this strain on this carbon
+source, and where did that fact come from?":
+
+- **No single database has the full triad.** NCBI has taxonomy and genomes,
+  BacDive has curated phenotype tests, and the actual media recipe is often
+  only in the cited paper's methods section — sometimes behind a paywall,
+  sometimes in PubMed Central, sometimes nowhere machine-readable at all.
+- **Resolution is ambiguous and must be iterative.** "E. coli K-12" needs to
+  become a specific NCBI tax ID, then a specific BacDive strain record (BacDive
+  pages results by ID, not relevance, so the right strain may not be in the
+  first batch returned), before any phenotype data can be pulled.
+- **Literature access is a decision tree, not a single call.** Resolve a DOI,
+  try PubMed Central's structured full text first, fall back to
+  Crossref/Unpaywall/a direct fetch if the article isn't deposited there, and
+  be honest when nothing is actually readable (most papers are still
+  paywalled).
+
+Each step's result shapes the next call, which is exactly the loop a
+tool-using agent is for.
+
+## How it works
+
+GenoScape is built on top of `agentbook/`, a small tool-using agent harness
+(a model adapter, a `ToolRegistry` that validates arguments and turns
+failures into messages the model can act on, a run loop, and JSONL tracing).
+The domain-specific tools live in [examples/my_tools.py](examples/my_tools.py);
+the agent entry point is [examples/Genoscape.py](examples/Genoscape.py).
+
+## Tools
+
+| Stage | Tool | What it does |
+|---|---|---|
+| Resolve | `get_ncbi_strain_names` | Prokaryote name → NCBI Taxonomy ID, rank, and every alternate name on record (synonyms, common names, type-strain deposit numbers). |
+| Resolve | `get_bacdive_details` | Taxonomic name (+ optional NCBI tax ID) → matching BacDive record(s): BacDive ID, NCBI mapping, and every section (morphology, culture conditions, physiology, sequence info, literature). |
+| Resolve | `pick_top_bacdive_strain` | Chains the two above end-to-end and picks **one** strain (NCBI-matched → type strain → lowest BacDive-ID), so nothing downstream has to disambiguate. |
+| Phenotype | `get_bacdive_carbon_source_growth` | One strain's carbon-source utilization tests only: metabolite, growth (+/-), and the reference backing each test. |
+| Literature | `get_pubmed_reference_text` | DOI → full text from PubMed Central, when the article is deposited there. |
+| Literature | `get_bacdive_reference_text` | DOI/URL → text via Crossref + Unpaywall + a direct fetch, as a fallback when an article isn't in PMC. |
+| Extraction | `extract_media_composition_candidates` | Scans fetched text for lines that look like media composition (quantity + unit next to a media keyword) — a keyword filter, not language understanding; candidates to verify, not a guaranteed recipe. |
+| Save | `save_carbon_source_media_record` | Runs the literature step for one carbon-source test (PMC first, fallback second), extracts media candidates, and writes a JSON record to `data/strain_media/`. |
 
 ## Setup
 
 ```bash
-git clone https://github.com/ioanazelko/AgenticAI2026_Tutorial-1 && cd AgenticAI2026_Tutorial-1
 pip install -r requirements.txt
-cp .env.example .env        # your key, and REGISTRY_DIR if you clone the full registry
-python -m pytest            # offline, a few seconds
 ```
 
-Python 3.10 or newer, on Linux, macOS or Windows. On Windows, use
-`copy .env.example .env` in Command Prompt (PowerShell accepts `cp`).
-
-For the full registry (about 200 MB):
+Create a `.env` file in the repo root (never commit it):
 
 ```bash
-git clone --depth 1 https://github.com/ioanazelko/darkmatterfm-registry ~/darkmatterfm-registry
+OPENROUTER_API_KEY=...        # or ANTHROPIC_API_KEY, for examples/Genoscape.py
+NCBI_API_KEY=...              # optional: raises the NCBI rate limit from ~3 to ~10 req/s
+UNPAYWALL_EMAIL=you@email.com # optional: lets get_bacdive_reference_text check for an open-access copy
 ```
 
-and set `REGISTRY_DIR=~/darkmatterfm-registry` in `.env`. On Windows, if git reports
-"Filename too long", run `git config --global core.longpaths true` and clone again. The first tool call
-builds an index of all 6,145 cards, which takes about 30 seconds; later runs
-read it from `.cache/`.
+Optionally, `pip install pypdf` so `get_bacdive_reference_text` can extract text from a
+fetched PDF (without it, a PDF comes back as a placeholder string instead of its text).
 
-## Run it
+Python 3.10+. Run the offline test suite (no API key needed, a few seconds):
 
-New to agent loops? Read [HOW_THE_LOOP_WORKS.md](HOW_THE_LOOP_WORKS.md)
-first: it walks through `run_agent` line by line, using `minimal_loop` as the
-example.
+```bash
+python -m pytest
+```
 
-| Command | What it shows | Talk section |
-|---|---|---|
-| `python -m examples.minimal_loop` | The loop on one question, the message list after each step, and the trace | 2. The minimal loop |
-| `python -m examples.lyman_alpha_plan` | Plan, act, reflect on the Lyman-α question, graded against ground truth | 5. Plan → act → reflect |
-| `python -m examples.failure_trace` | A clean-looking run that invents numbers, and the trace checks that catch it | 6. Traces |
-| `python -m examples.run_live "your question"` | The same loop with a real model, then the same checks | all |
+## Running it
 
-`run_live.py` uses OpenRouter when `OPENROUTER_API_KEY` is set, otherwise the
-Anthropic API (`ANTHROPIC_API_KEY`). Options: `--model`, `--plan` (adds the
-planning tool), `--max-steps`, `--budget` (tokens). A run on Claude Sonnet 5
-with the default 200k-token budget costs at most about US$0.50.
+```bash
+python -m examples.Genoscape --prokaryote_name "Escherichia coli K-12"
+```
 
-Traces are written to `traces/`. The three recorded traces from the talk are
-already there, so you can read them before running anything.
+flags: `--provider` (openrouter/anthropic), `--model`, `--plan` (adds a
+plan/reflect loop), `--max-steps`, `--budget` (token cap). Every run is traced
+to `traces/live_<time>.jsonl`.
+
+You can also drive the pipeline directly, one tool call at a time, without a
+model — useful for testing or scripting a fixed pipeline:
+
+```python
+from examples.my_tools import (pick_top_bacdive_strain, get_bacdive_carbon_source_growth,
+                               save_carbon_source_media_record)
+
+strain = pick_top_bacdive_strain("Escherichia coli")
+tests = get_bacdive_carbon_source_growth(strain["bacdive_id"])["tests"]
+for test in tests:
+    if test["growth"]:
+        save_carbon_source_media_record(
+            bacdive_id=strain["bacdive_id"], metabolite=test["metabolite"],
+            ref_id=test["ref"], ncbi_id=strain["ncbi_taxid"])
+```
+
+Each call writes `data/strain_media/<bacdive_id>_<carbon_source>.json`:
+
+```json
+{
+  "carbon_source": "glucose",
+  "growth": true,
+  "genome": "GCA_900699165",
+  "ncbi_id": "562",
+  "strain_id": 4434,
+  "full_media": [],
+  "provenance": {"ref_id": 31279, "reference_title": "...", "doi": "...", "text_source": "pubmed_central", "pmcid": "PMC5541158"}
+}
+```
+
+`full_media` is only ever what was actually found in the fetched paper text —
+it's left empty rather than silently backfilled from BacDive's own structured
+`culture medium` field, so every record's provenance stays honest.
+
+## Status
+
+Implemented: strain resolution, carbon-source phenotype extraction, a
+two-tier literature-fetch strategy (PMC → Crossref/Unpaywall/direct), and
+best-effort media-composition extraction with JSON output.
+
+Not yet built, per the original plan in [SPEC.md](SPEC.md): a dedicated
+MediaDive API tool (media composition currently comes from BacDive's own
+record or a keyword scan of paper text, not a direct MediaDive query), a
+Fitness Browser (RB-TnSeq) tool for gene-level perturbation data, and strict
+Pydantic schema validation of extracted records (current extraction is a
+keyword filter, not a validated structured parse).
 
 ## Layout
 
 ```
-agentbook/
-  loop.py            run_agent(): the loop and its three exits (done, max_steps, budget)
-  models.py          message format, FakeModel, AnthropicModel, OpenAIModel (OpenRouter)
-  tools.py           Tool, ToolRegistry: schema checks, errors returned as results, truncation
-  registry.py        the registry tools: search_models, get_card_section, get_gaps,
-                     find_models_by_observable, validate_card
-  tracing.py         JSONL Tracer, load_trace, format_trace, summarize_trace
-  guardrails.py      Budget, LoopGuard, check_cited_ids
-  provenance.py      check_numbers: every number in an answer must appear in a tool result
-  planning.py        the update_plan tool and run_with_plan
-  evals.py           Lyman-α ground truth and graders
-  reproducibility.py run metadata for traces
-examples/            the four scripts above, and my_tools.py for your own tools
-solutions/           one solution per exercise
-data/                registry snapshot and ground truth
-traces/              recorded traces
-tests/               pytest, offline
+agentbook/            the underlying tool-using agent harness (model adapter,
+                       ToolRegistry, run loop, tracing, plan/reflect scaffolding)
+examples/
+  Genoscape.py         GenoScape's agent entry point
+  my_tools.py          the GenoScape tools (table above)
+  minimal_loop.py, lyman_alpha_plan.py, failure_trace.py, run_live.py
+                       the original dark-matter-registry examples this
+                       harness was built for -- unrelated to GenoScape's
+                       domain, kept as a second worked example of the harness
+data/
+  strain_media/        JSON records written by save_carbon_source_media_record
+  registry_snapshot/   dark-matter model cards used by the examples above
+traces/                JSONL traces of agent runs
+tests/                 pytest, offline
+SPEC.md                the original project spec and task definition
 ```
-
-## Exercises
-
-See [EXERCISES.md](EXERCISES.md). For how the loop works, see
-[HOW_THE_LOOP_WORKS.md](HOW_THE_LOOP_WORKS.md).
-
-## Two ways to run an agent
-
-This repo is the API route: your code runs the loop and you pay per token.
-You can also give these tools to Claude Code or Codex and let them run the
-loop on your subscription. That is quicker to try, but you give up control of
-the loop, the prompts and the trace format. See the talk's section 8.
 
 ## Licence
 
-The code is under the [MIT licence](LICENSE). The registry snapshot in
-`data/registry_snapshot/` comes from DarkMatterFM-Registry and keeps that
-repository's terms; see `data/registry_snapshot/REGISTRY_COPYRIGHT.md`.
+The code is under the [MIT licence](LICENSE). `data/registry_snapshot/` comes
+from DarkMatterFM-Registry and keeps that repository's own terms; see
+`data/registry_snapshot/REGISTRY_COPYRIGHT.md`.

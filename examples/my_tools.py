@@ -424,6 +424,99 @@ def extract_media_composition_candidates(text: str, max_lines: int = 40) -> dict
     return {"n_candidates": len(candidates), "candidate_lines": candidates[:max_lines]}
 
 
+def _best_genome_accession(record: dict, ncbi_taxid: str | None = None) -> str | None:
+    """The record's best INSDC genome accession: prefer one whose own NCBI tax ID matches
+    `ncbi_taxid`, then the highest BacDive match `score`."""
+    genomes = (record.get("Sequence information") or {}).get("Genome sequences") or []
+    if isinstance(genomes, dict):
+        genomes = [genomes]
+    if not genomes:
+        return None
+    if ncbi_taxid is not None:
+        matching = [g for g in genomes if str(g.get("NCBI tax ID")) == str(ncbi_taxid)]
+        genomes = matching or genomes
+    best = max(genomes, key=lambda g: g.get("score") or 0)
+    return best.get("INSDC accession")
+
+
+def _slugify(text: str) -> str:
+    return re.sub(r"_+", "_", re.sub(r"[^A-Za-z0-9]+", "_", text)).strip("_").lower() or "unknown"
+
+
+def save_carbon_source_media_record(bacdive_id: int, metabolite: str, ref_id: int,
+                                    ncbi_id: str | None = None) -> dict:
+    """For one carbon-source test from get_bacdive_carbon_source_growth (its `metabolite`
+    and `ref` id), track down the medium behind it and save a compact JSON record to disk.
+
+    Steps: look up the reference's doi/url on the BacDive record; if it's a DOI, try
+    PubMed Central full text first (get_pubmed_reference_text), falling back to
+    Crossref/Unpaywall/direct fetch (get_bacdive_reference_text) if the article isn't in
+    PMC; scan whatever text was obtained for media-composition lines
+    (extract_media_composition_candidates). Saves and returns a record with exactly:
+    carbon_source, growth, genome, ncbi_id, strain_id, full_media (plus a `provenance`
+    block). `full_media` is only ever what the paper's own text yielded -- it is left
+    empty (not silently filled from BacDive's own 'culture medium' field) if no
+    composition lines were found there, so the source of every record stays honest."""
+    record = _fetch_bacdive_record(bacdive_id)
+
+    tests = get_bacdive_carbon_source_growth(bacdive_id)["tests"]
+    test = next((t for t in tests if t["metabolite"] == metabolite and t["ref"] == ref_id), None)
+    if test is None:
+        raise ToolError(f"BacDive-ID {bacdive_id} has no carbon-source test for metabolite "
+                        f"'{metabolite}' with ref {ref_id}. Call get_bacdive_carbon_source_growth "
+                        f"({bacdive_id}) to see the actual (metabolite, ref) pairs.")
+
+    refs = record.get("Reference") or []
+    if isinstance(refs, dict):
+        refs = [refs]
+    ref = next((r for r in refs if r.get("@id") == ref_id), None)
+    if ref is None:
+        raise ToolError(f"BacDive-ID {bacdive_id} has no reference @id={ref_id}.")
+    location = (ref.get("doi/url") or "").strip()
+
+    text, provenance = "", {"ref_id": ref_id, "reference_title": ref.get("title"),
+                            "doi_or_url": location or None, "text_source": "none"}
+    if location and not location.startswith("http"):
+        provenance["doi"] = location
+        pubmed = get_pubmed_reference_text(location)
+        if pubmed.get("text"):
+            text, provenance["text_source"] = pubmed["text"], "pubmed_central"
+            provenance["pmcid"] = pubmed.get("pmcid")
+        else:
+            fallback = get_bacdive_reference_text(bacdive_id, ref_id)
+            if fallback.get("text"):
+                text, provenance["text_source"] = fallback["text"], fallback.get("content_type", "web")
+            provenance["pubmed_status"] = pubmed.get("status")
+    elif location:
+        fallback = get_bacdive_reference_text(bacdive_id, ref_id)
+        if fallback.get("text"):
+            text, provenance["text_source"] = fallback["text"], fallback.get("content_type", "web")
+
+    try:
+        full_media = extract_media_composition_candidates(text)["candidate_lines"] if text else []
+    except ToolError:
+        full_media = []
+    if not full_media:
+        provenance["media_extraction_status"] = (
+            "no text available to scan" if not text else
+            "text fetched, but no composition-looking lines were found in it")
+
+    out = {
+        "carbon_source": metabolite,
+        "growth": test["growth"],
+        "genome": _best_genome_accession(record, ncbi_id),
+        "ncbi_id": ncbi_id,
+        "strain_id": bacdive_id,
+        "full_media": full_media,
+        "provenance": provenance,
+    }
+
+    MEDIA_RECORDS_DIR.mkdir(parents=True, exist_ok=True)
+    path = MEDIA_RECORDS_DIR / f"{bacdive_id}_{_slugify(metabolite)}.json"
+    path.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
+    return {"path": str(path), "record": out}
+
+
 MY_TOOLS: list[Tool] = [
     Tool(
         "get_ncbi_strain_names",
@@ -507,6 +600,21 @@ MY_TOOLS: list[Tool] = [
         get_bacdive_reference_text,
     ),
     Tool(
+        "get_pubmed_reference_text",
+        "Resolve a DOI to its full text in PubMed Central (PMC), if the article is in "
+        "PMC's Open Access / author-manuscript set. Converts the DOI to a PMCID via NCBI's "
+        "ID Converter and fetches the structured JATS full text via efetch -- more "
+        "reliable than scraping a publisher page when it works, but only works for "
+        "articles actually deposited in PMC. Returns `text` empty with `status` explaining "
+        "why otherwise (most paywalled or non-PMC-deposited articles); fall back to "
+        "get_bacdive_reference_text's Crossref/Unpaywall path in that case.",
+        {"type": "object", "properties": {
+            "doi": {"type": "string", "description": "e.g. '10.1099/ijsem.0.004332' "
+                   "(from a BacDive reference's doi/url field)."}},
+         "required": ["doi"], "additionalProperties": False},
+        get_pubmed_reference_text,
+    ),
+    Tool(
         "extract_media_composition_candidates",
         "Scan free text (typically the `text` field from get_bacdive_reference_text) for "
         "lines that look like culture-medium composition: a quantity+unit alongside a "
@@ -521,5 +629,26 @@ MY_TOOLS: list[Tool] = [
             "max_lines": {"type": "integer", "minimum": 1, "maximum": 200, "default": 40}},
          "required": ["text"], "additionalProperties": False},
         extract_media_composition_candidates,
+    ),
+    Tool(
+        "save_carbon_source_media_record",
+        "For one carbon-source test from get_bacdive_carbon_source_growth, track down the "
+        "medium behind it and save a JSON record to disk (data/strain_media/<bacdive_id>_"
+        "<carbon_source>.json). Tries PubMed Central full text first, falls back to "
+        "Crossref/Unpaywall/direct fetch if the reference isn't in PMC, then scans "
+        "whatever text was obtained for composition lines. Returns the saved file path and "
+        "the record: carbon_source, growth, genome (best INSDC accession), ncbi_id, "
+        "strain_id, full_media (list of composition lines found IN THE PAPER -- empty, not "
+        "guessed, if none were found), plus a provenance block (reference, doi/pmcid, "
+        "where the text came from).",
+        {"type": "object", "properties": {
+            "bacdive_id": {"type": "integer"},
+            "metabolite": {"type": "string", "description": "A carbon source's exact "
+                          "'metabolite' value from get_bacdive_carbon_source_growth."},
+            "ref_id": {"type": "integer", "description": "That same test's 'ref' value."},
+            "ncbi_id": {"type": "string", "description": "NCBI taxonomy ID for this strain, "
+                       "e.g. from pick_top_bacdive_strain."}},
+         "required": ["bacdive_id", "metabolite", "ref_id"], "additionalProperties": False},
+        save_carbon_source_media_record,
     ),
 ]

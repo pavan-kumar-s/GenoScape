@@ -1,0 +1,7 @@
+.env
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+traces/live_*.jsonl

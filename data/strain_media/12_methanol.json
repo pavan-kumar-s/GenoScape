@@ -1,0 +1,17 @@
+{
+  "carbon_source": "methanol",
+  "growth": false,
+  "genome": "GCA_001580535",
+  "ncbi_id": "178900",
+  "strain_id": 12,
+  "full_media": [],
+  "provenance": {
+    "ref_id": 23233,
+    "reference_title": "Re-examination of the genus Acetobacter, with descriptions of Acetobacter cerevisiae sp. nov. and Acetobacter malorum sp. nov.",
+    "doi_or_url": "10.1099/ijs.0.02064-0",
+    "text_source": "none",
+    "doi": "10.1099/ijs.0.02064-0",
+    "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+    "media_extraction_status": "no text available to scan"
+  }
+}

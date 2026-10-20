@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TASK = (
     "Exract the growth phenotype data for the following organism: {prokaryote_name}."
     "The growth can be qualitative or quantitative."
-    "The final output should be a json file that atleast contain strain_name, carbon source and growth output"
+    "The final output should be a json file that atleast contain strain_name, metabolite utilized and growth output"
 )
 
 DEFAULT_MODELS = {"openrouter": "anthropic/claude-sonnet-4.5", "anthropic": "claude-haiku-4.5"}

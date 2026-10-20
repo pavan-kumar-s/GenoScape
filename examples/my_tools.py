@@ -229,8 +229,13 @@ def pick_top_bacdive_strain(prokaryote_name: str, max_results: int = 50) -> dict
     return result
 
 
+GROWTH_UTILIZATION_KINDS = {"carbon source", "growth"}
+
+
 def get_bacdive_carbon_source_growth(bacdive_id: int) -> dict:
-    """Return one BacDive strain's carbon-source utilization tests only: each tested
+    """Return one BacDive strain's growth-relevant metabolite tests: entries whose `kind
+    of utilization tested` is 'carbon source' or 'growth' (BacDive curators use either
+    label for the same kind of test, depending on the source). Each result has the
     metabolite, its Chebi-ID, whether it supported growth (+ -> true), and the `ref` id
     of the source backing it -- pass that ref id and metabolite name to
     save_carbon_source_media_record to track down and save the medium behind it."""
@@ -245,12 +250,12 @@ def get_bacdive_carbon_source_growth(bacdive_id: int) -> dict:
         {"metabolite": e.get("metabolite"), "chebi_id": e.get("Chebi-ID"),
          "growth": e.get("utilization activity") == "+",
          "utilization_activity": e.get("utilization activity"), "ref": e.get("@ref")}
-        for e in entries if e.get("kind of utilization tested") == "carbon source"
+        for e in entries if e.get("kind of utilization tested") in GROWTH_UTILIZATION_KINDS
     ]
     if not tests:
         kinds_present = sorted({e.get("kind of utilization tested") for e in entries})
-        raise ToolError(f"BacDive-ID {bacdive_id} has no 'carbon source' utilization tests "
-                        f"(only: {', '.join(kinds_present)}).")
+        raise ToolError(f"BacDive-ID {bacdive_id} has no 'carbon source' or 'growth' "
+                        f"utilization tests (only: {', '.join(kinds_present)}).")
     return {"bacdive_id": bacdive_id, "n_tests": len(tests), "tests": tests}
 
 
@@ -570,13 +575,15 @@ MY_TOOLS: list[Tool] = [
     ),
     Tool(
         "get_bacdive_carbon_source_growth",
-        "Return one BacDive strain's carbon-source utilization test results only (not "
-        "energy source, fermentation, or any other kind): each tested metabolite, whether "
-        "it supported growth (true/false from the +/- utilization activity), and the "
-        "reference id the test came from. Pass one entry's metabolite + ref id into "
-        "save_carbon_source_media_record to track down and save the medium behind it. "
-        "Fails if the strain has no carbon-source utilization data -- the error lists "
-        "which other kinds of utilization data it does have, if any.",
+        "Return one BacDive strain's growth-relevant metabolite tests: entries whose "
+        "'kind of utilization tested' is 'carbon source' or 'growth' (not energy source, "
+        "fermentation, nitrogen source, or any other kind) -- BacDive curators use either "
+        "label for the same kind of test depending on the source. Each result has the "
+        "tested metabolite, whether it supported growth (true/false from the +/- "
+        "utilization activity), and the reference id the test came from. Pass one entry's "
+        "metabolite + ref id into save_carbon_source_media_record to track down and save "
+        "the medium behind it. Fails if the strain has neither kind of utilization data -- "
+        "the error lists which other kinds it does have, if any.",
         {"type": "object", "properties": {
             "bacdive_id": {"type": "integer", "description": "From pick_top_bacdive_strain "
                            "or get_bacdive_details."}},

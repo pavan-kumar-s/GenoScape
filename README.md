@@ -32,7 +32,7 @@ UNPAYWALL_EMAIL=you@email.com
 ## 3. Run it
 
 ```bash
-python -m examples.Genoscape --prokaryote_name "Escherichia coli K-12"
+python -m examples.Genoscape --prokaryote_name "Acetobacter cerevisiae"
 ```
 
 Swap in any organism name you want. It will take a little while — it's

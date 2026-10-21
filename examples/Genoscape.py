@@ -32,7 +32,7 @@ DEFAULT_TASK = (
     "The final output should be a json file that atleast contain strain_name, metabolite utilized and growth output"
 )
 
-DEFAULT_MODELS = {"openrouter": "anthropic/claude-sonnet-4.5", "anthropic": "claude-haiku-4.5"}
+DEFAULT_MODELS = {"openrouter": "anthropic/claude-haiku-4.5", "anthropic": "claude-haiku-4.5"}
 
 
 def load_env(path: Path = ROOT / ".env") -> None:

@@ -237,8 +237,8 @@ def get_bacdive_carbon_source_growth(bacdive_id: int) -> dict:
     of utilization tested` is 'carbon source' or 'growth' (BacDive curators use either
     label for the same kind of test, depending on the source). Each result has the
     metabolite, its Chebi-ID, whether it supported growth (+ -> true), and the `ref` id
-    of the source backing it -- pass that ref id and metabolite name to
-    save_carbon_source_media_record to track down and save the medium behind it."""
+    of the source backing it. Pass this strain's bacdive_id to
+    save_carbon_source_media_records to resolve and save all of them at once."""
     record = _fetch_bacdive_record(bacdive_id)
     phys = record.get("Physiology and metabolism") or {}
     entries = phys.get("metabolite utilization") or []
@@ -402,31 +402,56 @@ def get_bacdive_reference_text(bacdive_id: int, ref_id: int) -> dict:
     return result
 
 
-_MEDIA_UNIT_RE = re.compile(
-    r"\b\d+(?:\.\d+)?\s?(?:n?[mM]?g|m?[lL]|%|m[mM]|[mM]ol|[mM]M)\b")
-_MEDIA_KEYWORDS = ("agar", "broth", "medium", "media", "peptone", "yeast extract", "nacl",
-                  "glucose", "buffer", " ph ", "autoclave", "distilled water", "sterile",
-                  "supplement", "incubat", "extract", "casein", "tryptone")
+EXTRACTION_SYSTEM = (
+    "You extract culture-medium / growth-condition information from one scientific "
+    "paper's text. Report only what the text actually states -- never guess, infer a "
+    "textbook default, or fill in a gap. Respond with ONLY a JSON object, no other text "
+    "and no markdown fences, matching exactly this shape:\n"
+    '{"found": bool, "media": [{"name": string|null, '
+    '"ingredients": [{"name": string, "amount": string|null}], '
+    '"temperature": string|null, "ph": string|null, "notes": string|null}]}\n'
+    'If the text does not describe a growth medium at all, return {"found": false, "media": []}.'
+)
 
 
-def extract_media_composition_candidates(text: str, max_lines: int = 40) -> dict:
-    """Scan free text (typically the `text` from get_bacdive_reference_text) for lines
-    that look like culture-medium composition: a quantity-with-unit together with a
-    media-related keyword. This is a deterministic keyword filter, NOT language
-    understanding -- it will miss ingredients phrased unusually and can include an
-    unrelated line that happens to match both patterns. Review the candidates (and the
-    surrounding text) before treating them as the exact recipe. If the BacDive record
-    itself already has a 'culture medium' / 'composition' field (get_bacdive_details or
-    get_bacdive_carbon_source_growth's bacdive_id), prefer that structured source over
-    this heuristic text scan."""
-    candidates = [line.strip() for line in text.splitlines() if line.strip()
-                 and _MEDIA_UNIT_RE.search(line) and any(k in line.lower() for k in _MEDIA_KEYWORDS)]
-    if not candidates:
-        raise ToolError("No lines matched both a quantity+unit and a media-related keyword. "
-                        "The recipe may be in a table/figure that didn't survive text "
-                        "extraction, or phrased differently -- try reading the full text, or "
-                        "check the BacDive record's own 'culture medium' field first.")
-    return {"n_candidates": len(candidates), "candidate_lines": candidates[:max_lines]}
+def _extraction_model():
+    """The model used to read a paper and extract media details: OpenRouter if
+    OPENROUTER_API_KEY is set, otherwise Anthropic directly via ANTHROPIC_API_KEY.
+    Raises ToolError if neither is set -- this step needs a real model, unlike every
+    other tool in this file."""
+    model_name = os.environ.get("EXTRACTION_MODEL")
+    if os.environ.get("OPENROUTER_API_KEY"):
+        from agentbook.models import OpenAIModel
+        return OpenAIModel(model_name or "anthropic/claude-haiku-4.5",
+                           base_url="https://openrouter.ai/api/v1",
+                           api_key=os.environ["OPENROUTER_API_KEY"])
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        from agentbook.models import AnthropicModel
+        return AnthropicModel(model_name or "claude-haiku-4.5")
+    raise ToolError("extract_media_composition needs a model to read the paper text: set "
+                    "OPENROUTER_API_KEY or ANTHROPIC_API_KEY in .env.")
+
+
+def extract_media_composition(text: str) -> dict:
+    """Upload the whole paper text to an LLM and have it extract the culture-medium /
+    growth-condition details it actually states, as structured JSON: for each medium
+    described, its name, ingredients (name + amount), temperature, pH, and any other
+    notes. Call this ONCE per paper, not once per carbon source -- the same paper is
+    often the reference behind several carbon-source tests on the same strain, and its
+    medium doesn't change between them. Returns {"found": false, "media": []} if the
+    text doesn't describe a medium at all; raises ToolError if there's no model
+    configured, or if the model's reply isn't valid JSON."""
+    if not text.strip():
+        raise ToolError("No text to extract from.")
+    model = _extraction_model()
+    messages = [{"role": "user", "content": f"Paper text:\n\n{text}"}]
+    response = model.complete(EXTRACTION_SYSTEM, messages, tools=[], max_tokens=1500)
+    raw = re.sub(r"^```(?:json)?\s*|\s*```\s*$", "", response.text.strip())
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise ToolError(f"Extraction model did not return valid JSON: {raw[:300]}") from e
+    return parsed
 
 
 def _best_genome_accession(record: dict, ncbi_taxid: str | None = None) -> str | None:
@@ -448,29 +473,12 @@ def _slugify(text: str) -> str:
     return re.sub(r"_+", "_", re.sub(r"[^A-Za-z0-9]+", "_", text)).strip("_").lower() or "unknown"
 
 
-def save_carbon_source_media_record(bacdive_id: int, metabolite: str, ref_id: int,
-                                    ncbi_id: str | None = None) -> dict:
-    """For one carbon-source test from get_bacdive_carbon_source_growth (its `metabolite`
-    and `ref` id), track down the medium behind it and save a compact JSON record to disk.
-
-    Steps: look up the reference's doi/url on the BacDive record; if it's a DOI, try
-    PubMed Central full text first (get_pubmed_reference_text), falling back to
-    Crossref/Unpaywall/direct fetch (get_bacdive_reference_text) if the article isn't in
-    PMC; scan whatever text was obtained for media-composition lines
-    (extract_media_composition_candidates). Saves and returns a record with exactly:
-    carbon_source, growth, genome, ncbi_id, strain_id, full_media (plus a `provenance`
-    block). `full_media` is only ever what the paper's own text yielded -- it is left
-    empty (not silently filled from BacDive's own 'culture medium' field) if no
-    composition lines were found there, so the source of every record stays honest."""
-    record = _fetch_bacdive_record(bacdive_id)
-
-    tests = get_bacdive_carbon_source_growth(bacdive_id)["tests"]
-    test = next((t for t in tests if t["metabolite"] == metabolite and t["ref"] == ref_id), None)
-    if test is None:
-        raise ToolError(f"BacDive-ID {bacdive_id} has no carbon-source test for metabolite "
-                        f"'{metabolite}' with ref {ref_id}. Call get_bacdive_carbon_source_growth "
-                        f"({bacdive_id}) to see the actual (metabolite, ref) pairs.")
-
+def _resolve_reference(bacdive_id: int, record: dict, ref_id: int) -> dict:
+    """Track down the text and media-composition candidates behind one reference: PMC
+    full text first, then Crossref/Unpaywall/direct fetch, then scan whatever text came
+    back for media lines. Call once per ref_id -- several carbon-source tests can share
+    the same reference, and the medium it describes doesn't depend on which metabolite
+    is being asked about."""
     refs = record.get("Reference") or []
     if isinstance(refs, dict):
         refs = [refs]
@@ -497,27 +505,60 @@ def save_carbon_source_media_record(bacdive_id: int, metabolite: str, ref_id: in
         if fallback.get("text"):
             text, provenance["text_source"] = fallback["text"], fallback.get("content_type", "web")
 
-    try:
-        full_media = extract_media_composition_candidates(text)["candidate_lines"] if text else []
-    except ToolError:
-        full_media = []
-    if not full_media:
+    full_media = []
+    if text:
+        try:
+            full_media = extract_media_composition(text).get("media") or []
+        except ToolError as e:
+            provenance["media_extraction_status"] = f"extraction failed: {e}"
+    if not full_media and "media_extraction_status" not in provenance:
         provenance["media_extraction_status"] = (
             "no text available to scan" if not text else
-            "text fetched, but no composition-looking lines were found in it")
+            "model found no medium described in the text")
+
+    return {"full_media": full_media, "provenance": provenance}
+
+
+def save_carbon_source_media_records(bacdive_id: int, strain_name: str,
+                                     ncbi_id: str | None = None) -> dict:
+    """Resolve EVERY carbon-source/growth test for one BacDive strain
+    (get_bacdive_carbon_source_growth) and save them all into a single JSON file:
+    data/strain_media/<strain_name>_<ncbi_id>.json.
+
+    For each distinct reference behind those tests (several tests often share one):
+    track down its text (PubMed Central full text first, falling back to
+    Crossref/Unpaywall/direct fetch if the reference isn't in PMC), then have an LLM
+    extract its media composition (extract_media_composition) -- resolved once per
+    reference, not once per carbon source, so tests sharing a reference get identical,
+    consistent results instead of independent (and possibly flaky) re-fetches and
+    re-extractions. The file has strain_name, ncbi_id, strain_id, genome at the top
+    level, and one entry per carbon source under `carbon_sources` (carbon_source,
+    growth, full_media, provenance). `full_media` is only ever what a paper's own text
+    yielded -- left empty (never silently filled from BacDive's own 'culture medium'
+    field) when nothing was found, so every entry's source stays honest."""
+    record = _fetch_bacdive_record(bacdive_id)
+    tests = get_bacdive_carbon_source_growth(bacdive_id)["tests"]
+
+    resolved_by_ref: dict[int, dict] = {}
+    carbon_sources = []
+    for test in tests:
+        ref_id = test["ref"]
+        if ref_id not in resolved_by_ref:
+            resolved_by_ref[ref_id] = _resolve_reference(bacdive_id, record, ref_id)
+        resolved = resolved_by_ref[ref_id]
+        carbon_sources.append({"carbon_source": test["metabolite"], "growth": test["growth"],
+                              "full_media": resolved["full_media"], "provenance": resolved["provenance"]})
 
     out = {
-        "carbon_source": metabolite,
-        "growth": test["growth"],
-        "genome": _best_genome_accession(record, ncbi_id),
+        "strain_name": strain_name,
         "ncbi_id": ncbi_id,
         "strain_id": bacdive_id,
-        "full_media": full_media,
-        "provenance": provenance,
+        "genome": _best_genome_accession(record, ncbi_id),
+        "carbon_sources": carbon_sources,
     }
 
     MEDIA_RECORDS_DIR.mkdir(parents=True, exist_ok=True)
-    path = MEDIA_RECORDS_DIR / f"{bacdive_id}_{_slugify(metabolite)}.json"
+    path = MEDIA_RECORDS_DIR / f"{_slugify(strain_name)}_{_slugify(str(ncbi_id))}.json"
     path.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
     return {"path": str(path), "record": out}
 
@@ -576,13 +617,13 @@ MY_TOOLS: list[Tool] = [
     Tool(
         "get_bacdive_carbon_source_growth",
         "Return one BacDive strain's growth-relevant metabolite tests: entries whose "
-        "'kind of utilization tested' is 'carbon source' or 'growth' (not energy source, "
-        "fermentation, nitrogen source, or any other kind) -- BacDive curators use either "
+        "'kind of utilization tested' is 'carbon source' or 'growth'"
+        " -- BacDive curators use either "
         "label for the same kind of test depending on the source. Each result has the "
         "tested metabolite, whether it supported growth (true/false from the +/- "
-        "utilization activity), and the reference id the test came from. Pass one entry's "
-        "metabolite + ref id into save_carbon_source_media_record to track down and save "
-        "the medium behind it. Fails if the strain has neither kind of utilization data -- "
+        "utilization activity), and the reference id the test came from. Pass this "
+        "strain's bacdive_id into save_carbon_source_media_records to resolve and save "
+        "all of them at once. Fails if the strain has neither kind of utilization data -- "
         "the error lists which other kinds it does have, if any.",
         {"type": "object", "properties": {
             "bacdive_id": {"type": "integer", "description": "From pick_top_bacdive_strain "
@@ -622,40 +663,43 @@ MY_TOOLS: list[Tool] = [
         get_pubmed_reference_text,
     ),
     Tool(
-        "extract_media_composition_candidates",
-        "Scan free text (typically the `text` field from get_bacdive_reference_text) for "
-        "lines that look like culture-medium composition: a quantity+unit alongside a "
-        "media-related keyword (agar, broth, peptone, yeast extract, NaCl, pH, ...). This "
-        "is a deterministic keyword filter, NOT language understanding -- treat the result "
-        "as candidates to verify, not a guaranteed-accurate recipe. Prefer the BacDive "
-        "record's own 'culture medium'/'composition' field (from get_bacdive_details) when "
-        "it's already present; use this only when you need the recipe from the paper "
-        "itself.",
+        "extract_media_composition",
+        "Upload the whole paper text (typically the `text` field from "
+        "get_bacdive_reference_text or get_pubmed_reference_text) to an LLM and have it "
+        "extract the culture-medium / growth-condition details it actually states, as "
+        "structured JSON: for each medium described, its name, ingredients (name + "
+        "amount), temperature, pH, and notes. Call this ONCE per paper, not once per "
+        "carbon source -- the same paper is often the reference for several "
+        "carbon-source tests on the same strain. Needs OPENROUTER_API_KEY or "
+        "ANTHROPIC_API_KEY set; returns {'found': false, 'media': []} if the text "
+        "doesn't describe a medium at all.",
         {"type": "object", "properties": {
-            "text": {"type": "string"},
-            "max_lines": {"type": "integer", "minimum": 1, "maximum": 200, "default": 40}},
+            "text": {"type": "string"}},
          "required": ["text"], "additionalProperties": False},
-        extract_media_composition_candidates,
+        extract_media_composition,
     ),
     Tool(
-        "save_carbon_source_media_record",
-        "For one carbon-source test from get_bacdive_carbon_source_growth, track down the "
-        "medium behind it and save a JSON record to disk (data/strain_media/<bacdive_id>_"
-        "<carbon_source>.json). Tries PubMed Central full text first, falls back to "
-        "Crossref/Unpaywall/direct fetch if the reference isn't in PMC, then scans "
-        "whatever text was obtained for composition lines. Returns the saved file path and "
-        "the record: carbon_source, growth, genome (best INSDC accession), ncbi_id, "
-        "strain_id, full_media (list of composition lines found IN THE PAPER -- empty, not "
-        "guessed, if none were found), plus a provenance block (reference, doi/pmcid, "
-        "where the text came from).",
+        "save_carbon_source_media_records",
+        "Resolve EVERY carbon-source/growth test for one BacDive strain and save them "
+        "all into a SINGLE JSON file: data/strain_media/<strain_name>_<ncbi_id>.json. "
+        "For each distinct reference (several carbon sources often share one): tries "
+        "PubMed Central full text first, falls back to Crossref/Unpaywall/direct fetch "
+        "if the reference isn't in PMC, then has an LLM extract its media composition "
+        "once and reuses that for every carbon source citing it. Returns the saved file "
+        "path and the record: strain_name, ncbi_id, strain_id, genome (best INSDC "
+        "accession) at the top level, and a `carbon_sources` list with one entry per "
+        "carbon source (carbon_source, growth, full_media -- structured media found IN "
+        "THE PAPER, empty rather than guessed if none were found -- and a provenance "
+        "block). Needs OPENROUTER_API_KEY or ANTHROPIC_API_KEY set.",
         {"type": "object", "properties": {
-            "bacdive_id": {"type": "integer"},
-            "metabolite": {"type": "string", "description": "A carbon source's exact "
-                          "'metabolite' value from get_bacdive_carbon_source_growth."},
-            "ref_id": {"type": "integer", "description": "That same test's 'ref' value."},
+            "bacdive_id": {"type": "integer", "description": "From pick_top_bacdive_strain "
+                           "or get_bacdive_details."},
+            "strain_name": {"type": "string", "description": "The organism/strain name used "
+                           "to resolve it, e.g. from pick_top_bacdive_strain's "
+                           "'scientific_name'. Used to name the output file."},
             "ncbi_id": {"type": "string", "description": "NCBI taxonomy ID for this strain, "
-                       "e.g. from pick_top_bacdive_strain."}},
-         "required": ["bacdive_id", "metabolite", "ref_id"], "additionalProperties": False},
-        save_carbon_source_media_record,
+                       "e.g. from pick_top_bacdive_strain. Used to name the output file."}},
+         "required": ["bacdive_id", "strain_name"], "additionalProperties": False},
+        save_carbon_source_media_records,
     ),
 ]

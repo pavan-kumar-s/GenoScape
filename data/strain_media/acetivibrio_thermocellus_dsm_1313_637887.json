@@ -1,0 +1,70 @@
+{
+  "strain_name": "Acetivibrio thermocellus DSM 1313",
+  "ncbi_id": "637887",
+  "strain_id": 2728,
+  "genome": "GCA_000184925",
+  "carbon_sources": [
+    {
+      "carbon_source": "glucose",
+      "growth": true,
+      "full_media": [
+        {
+          "name": "GS-2 medium",
+          "ingredients": [
+            {
+              "name": "K2HPO4",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "MgCl2·6H2O",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "(NH4)2SO4",
+              "amount": "1.3 g/L"
+            },
+            {
+              "name": "resazurin",
+              "amount": "0.002 g/L"
+            },
+            {
+              "name": "3-(N-morpholino)propanesulfonic acid (MOPS) buffer",
+              "amount": "10.5 g/L"
+            },
+            {
+              "name": "yeast extract",
+              "amount": "5 g/L"
+            },
+            {
+              "name": "CaCl2",
+              "amount": "0.5 mM"
+            },
+            {
+              "name": "iron(II) sulfate",
+              "amount": "1.25 mg/L"
+            },
+            {
+              "name": "carbon source",
+              "amount": "0.3% (wt/vol) or 0.5% for glucose"
+            }
+          ],
+          "temperature": "60°C",
+          "ph": "7.2",
+          "notes": "Medium adjusted with 10 M NaOH to final pH of 7.2. Different carbon sources used: cellobiose (CB), microcrystalline cellulose (MCC), alkaline-pretreated switchgrass (alSG), alkaline-pretreated corn stover (alCS), dilute acid-pretreated corn stover (acCS), and glucose. 400 mL medium in 0.5 L serum bottles, boiled and flushed with nitrogen, sealed and autoclaved at 121°C for 20 min. Inoculated with C. thermocellum DSM1313. Incubated for 48 h in 60°C shaking incubator. Glucose-based media required preliminary adaptation with seven successive re-inoculation steps."
+        }
+      ],
+      "provenance": {
+        "ref_id": 43410,
+        "reference_title": "How does cellulosome composition  influence deconstruction of lignocellulosic  substrates in Clostridium (Ruminiclostridium)  thermocellum DSM 1313?",
+        "doi_or_url": "10.1186/s13068-017-0909-7",
+        "text_source": "pubmed_central",
+        "doi": "10.1186/s13068-017-0909-7",
+        "pmcid": "PMC5604425"
+      }
+    }
+  ]
+}

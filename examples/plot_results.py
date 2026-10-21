@@ -196,6 +196,79 @@ def plot_media_results(media_results: list[dict], model_label: str, out_dir: Pat
               out_dir / "media_extracted.png", value_fmt=lambda v: f"{v:.0%}", ylim=(0, 1.1))
 
 
+# ------------------------------------------------------- media-extraction method eval
+
+
+def plot_media_eval(results: list[dict], out_dir: Path = PLOTS_DIR,
+                    methods: tuple[str, ...] = ("whole_text", "retrieval")) -> None:
+    """One bar per extraction method: mean judged accuracy across papers, with a
+    standard-deviation error bar, and each method's total token spend named in the
+    legend -- accuracy alone hides that the two methods cost very different amounts to
+    reach it, and a mean alone hides how unevenly they perform paper to paper.
+
+    Reads examples/eval_media.py's output (data/eval_media_results.json): one row per
+    paper, each with a sub-object per method carrying score.accuracy and token counts.
+    Papers whose judge reply wasn't parseable (accuracy None) are left out of that
+    method's mean rather than counted as zero -- unlike eval.py's growth scoring, where
+    a missing answer really is a wrong answer, an unparseable JUDGE reply says nothing
+    about the extraction; the bar labels report how many papers each mean covers."""
+    import statistics
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    stats = {}
+    for method in methods:
+        accs = [row[method]["score"].get("accuracy") for row in results if method in row]
+        accs = [a for a in accs if a is not None]
+        tokens = sum(row[method]["input_tokens"] + row[method]["output_tokens"]
+                    for row in results if method in row)
+        stats[method] = {"mean": sum(accs) / len(accs) if accs else 0.0,
+                        "sd": statistics.stdev(accs) if len(accs) > 1 else 0.0,
+                        "n": len(accs), "tokens": tokens}
+
+    fig, ax = plt.subplots(figsize=(6.5, 4.4), dpi=150)
+    fig.patch.set_facecolor("#fcfcfb")
+    ax.set_facecolor("#fcfcfb")
+
+    xs = list(range(len(methods)))
+    for x, method in zip(xs, methods):
+        s = stats[method]
+        ax.bar([x], [s["mean"]], width=0.45, color=PALETTE[x % len(PALETTE)], zorder=3,
+              label=f"{method}  —  {s['tokens']:,} tokens")
+        ax.errorbar([x], [s["mean"]], yerr=[s["sd"]], fmt="none", ecolor="#52514e",
+                   elinewidth=1.4, capsize=6, capthick=1.4, zorder=4)
+        ax.text(x, s["mean"] + s["sd"] + 0.03, f"{s['mean']:.2f}", ha="center", va="bottom",
+               fontsize=11, color="#0b0b0b", zorder=5)
+        ax.text(x, 0.02, f"n={s['n']}", ha="center", va="bottom", fontsize=9,
+               color="#fcfcfb", zorder=5)
+
+    ax.set_xticks(xs)
+    ax.set_xticklabels(["Whole paper\n(1 call)", "Retrieval\n(ranked paragraphs)"],
+                      fontsize=10, color="#52514e")
+    ax.set_ylabel("judged accuracy (mean ± s.d.)", fontsize=10, color="#52514e")
+    ax.set_title("Growth-medium extraction accuracy (judged by Opus)",
+                fontsize=12, color="#0b0b0b", pad=12)
+    ax.set_ylim(0, 1.15)
+
+    ax.set_axisbelow(True)
+    ax.grid(axis="y", color="#e5e4df", linewidth=1, zorder=0)
+    for spine in ("top", "right", "left"):
+        ax.spines[spine].set_visible(False)
+    ax.spines["bottom"].set_color("#e5e4df")
+    ax.tick_params(left=False, bottom=False)
+    ax.legend(frameon=False, fontsize=9, labelcolor="#52514e", loc="lower center",
+             bbox_to_anchor=(0.5, -0.32), ncol=2, handlelength=1.2)
+
+    out_path = out_dir / "media_eval_accuracy.png"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.tight_layout()
+    fig.savefig(out_path, bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {out_path}")
+
+
 # --------------------------------------------------------------------------- CLI
 
 
@@ -227,10 +300,13 @@ def main() -> None:
     parser.add_argument("--provider", choices=["openrouter", "anthropic"],
                         default="openrouter" if os.environ.get("OPENROUTER_API_KEY") else "anthropic",
                         help="provider for the judge model used by --judge-media-accuracy")
+    parser.add_argument("--media-eval-results", help="path to examples/eval_media.py's output "
+                                                      "(data/eval_media_results.json): per-paper "
+                                                      "whole_text-vs-retrieval accuracy and tokens")
     parser.add_argument("--out-dir", default=str(PLOTS_DIR))
     args = parser.parse_args()
-    if not args.eval_results and not args.media_results:
-        parser.error("pass --eval-results and/or --media-results")
+    if not (args.eval_results or args.media_results or args.media_eval_results):
+        parser.error("pass --eval-results, --media-results and/or --media-eval-results")
     if args.judge_media_accuracy and not (args.eval_results and args.media_results):
         parser.error("--judge-media-accuracy requires both --eval-results and --media-results")
     out_dir = Path(args.out_dir)
@@ -260,6 +336,10 @@ def main() -> None:
 
     if media_results is not None:
         plot_media_results(media_results, args.media_label, out_dir)
+
+    if args.media_eval_results:
+        media_eval = json.loads(Path(args.media_eval_results).read_text(encoding="utf-8"))
+        plot_media_eval(media_eval, out_dir)
 
 
 if __name__ == "__main__":

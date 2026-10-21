@@ -435,8 +435,12 @@ EXTRACTION_SYSTEM = (
     "culture medium's composition. Report only what the excerpt actually states -- never "
     "guess, infer a textbook default, or fill in a gap, and never use outside knowledge: "
     "if the medium is only named here but its composition is given elsewhere (not in this "
-    "excerpt), that still counts as not found. Respond with ONLY a JSON object, no other "
-    "text and no markdown fences, matching exactly this shape:\n"
+    "excerpt), that still counts as not found. A medium NAME on its own -- even alongside "
+    "growth observations, colony colours, or test results for it -- is not a composition: "
+    "a composition means the actual ingredients the medium is made of. If you are told "
+    "which strain the excerpt concerns and the excerpt gives media for several different "
+    "organisms, report only the medium used to grow THAT strain. Respond with ONLY a JSON "
+    "object, no other text and no markdown fences, matching exactly this shape:\n"
     '{"found": bool, "media": [{"name": string|null, '
     '"ingredients": [{"name": string, "amount": string|null}], '
     '"temperature": string|null, "ph": string|null, "notes": string|null}]}\n'
@@ -506,24 +510,42 @@ def _extraction_model():
                     "OPENROUTER_API_KEY or ANTHROPIC_API_KEY in .env.")
 
 
-def _ask_model_for_media(model, window: str, usage_log: list | None = None) -> dict:
+def _ask_model_for_media(model, window: str, usage_log: list | None = None,
+                         strain_name: str | None = None) -> dict:
     """One LLM call: does this excerpt describe a growth medium? If so, extract it.
     If `usage_log` is given, its token usage is appended to it (for comparing methods'
-    cost -- see examples/eval_media.py); callers that don't care can ignore this."""
-    messages = [{"role": "user", "content": f"Excerpt from a paper:\n\n{window}"}]
+    cost -- see examples/eval_media.py); callers that don't care can ignore this.
+    `strain_name`, if given, tells the model which organism's medium to report when the
+    excerpt covers several.
+
+    A "found" result whose media all have empty ingredient lists is downgraded to not
+    found: a medium name next to growth observations is not a composition (a real case
+    -- a DSMZ datasheet listing 'Agar suter without tyrosine - G good' came back as a
+    found medium with no ingredients at all), and callers treat `found` as "there is a
+    recipe here", so letting that through makes every downstream record wrong."""
+    prefix = f"Strain the excerpt concerns: {strain_name}\n\n" if strain_name else ""
+    messages = [{"role": "user", "content": f"{prefix}Excerpt from a paper:\n\n{window}"}]
     response = model.complete(EXTRACTION_SYSTEM, messages, tools=[], max_tokens=1200)
     if usage_log is not None:
         usage_log.append({"input_tokens": response.usage.input_tokens,
                           "output_tokens": response.usage.output_tokens})
     raw = re.sub(r"^```(?:json)?\s*|\s*```\s*$", "", response.text.strip())
     try:
-        return json.loads(raw)
+        result = json.loads(raw)
     except json.JSONDecodeError as e:
         raise ToolError(f"Extraction model did not return valid JSON: {raw[:300]}") from e
 
+    if result.get("found") and not any((m.get("ingredients") or [])
+                                       for m in (result.get("media") or [])):
+        result["found"] = False
+        result["note"] = ("Model reported a medium with no ingredients at all (a name "
+                          "and/or growth observations only), which is not a composition.")
+    return result
+
 
 def extract_media_composition(text: str, max_attempts: int = 5,
-                              usage_log: list | None = None) -> dict:
+                              usage_log: list | None = None,
+                              strain_name: str | None = None) -> dict:
     """Find the paragraph(s) most likely to describe culture-medium composition -- ranked
     by density of concentration/quantity units (%, g/l, mg/l, mM, ml, ...) -- pad each
     with the paragraph before and after it for context, and ask an LLM to verify and
@@ -532,8 +554,10 @@ def extract_media_composition(text: str, max_attempts: int = 5,
     paper (cheaper, and the model isn't left to find a needle in a haystack). Call this
     ONCE per paper, not once per carbon source -- the same paper is often the reference
     behind several carbon-source tests on the same strain, and its medium doesn't change
-    between them. Returns {"found": false, "media": [], "attempts": n} if no candidate
-    panned out; raises ToolError if there's no model configured."""
+    between them. Pass `strain_name` when you know which organism the paper is being read
+    for, so a paper describing media for several organisms yields that strain's medium
+    rather than whichever one appears first. Returns {"found": false, "media": [],
+    "attempts": n} if no candidate panned out; raises ToolError if no model configured."""
     if not text.strip():
         raise ToolError("No text to extract from.")
     windows = _ranked_paragraph_windows(text, top_k=max_attempts)
@@ -543,7 +567,7 @@ def extract_media_composition(text: str, max_attempts: int = 5,
     model = _extraction_model()
     result = {"found": False, "media": []}
     for attempt, window in enumerate(windows, start=1):
-        result = _ask_model_for_media(model, window, usage_log)
+        result = _ask_model_for_media(model, window, usage_log, strain_name)
         if result.get("found"):
             result["attempts"] = attempt
             return result
@@ -551,7 +575,8 @@ def extract_media_composition(text: str, max_attempts: int = 5,
     return result
 
 
-def extract_media_composition_whole_text(text: str, usage_log: list | None = None) -> dict:
+def extract_media_composition_whole_text(text: str, usage_log: list | None = None,
+                                         strain_name: str | None = None) -> dict:
     """Upload the ENTIRE paper text to an LLM in a single call and ask it to extract
     media composition -- the simpler alternative to extract_media_composition's
     paragraph-retrieval approach. Kept here only for comparison (see
@@ -563,7 +588,7 @@ def extract_media_composition_whole_text(text: str, usage_log: list | None = Non
     if not text.strip():
         raise ToolError("No text to extract from.")
     model = _extraction_model()
-    return _ask_model_for_media(model, text, usage_log)
+    return _ask_model_for_media(model, text, usage_log, strain_name)
 
 
 def _best_genome_accession(record: dict, ncbi_taxid: str | None = None) -> str | None:
@@ -619,18 +644,20 @@ def _resolve_reference_text(bacdive_id: int, record: dict, ref_id: int) -> tuple
     return text, provenance
 
 
-def _resolve_reference(bacdive_id: int, record: dict, ref_id: int) -> dict:
+def _resolve_reference(bacdive_id: int, record: dict, ref_id: int,
+                       strain_name: str | None = None) -> dict:
     """Track down the text and media-composition candidates behind one reference: PMC
     full text first, then Crossref/Unpaywall/direct fetch, then scan whatever text came
     back for media lines. Call once per ref_id -- several carbon-source tests can share
     the same reference, and the medium it describes doesn't depend on which metabolite
-    is being asked about."""
+    is being asked about. `strain_name` is passed through to the extraction model so a
+    paper covering several organisms yields this strain's medium."""
     text, provenance = _resolve_reference_text(bacdive_id, record, ref_id)
 
     full_media = []
     if text:
         try:
-            full_media = extract_media_composition(text).get("media") or []
+            full_media = extract_media_composition(text, strain_name=strain_name).get("media") or []
         except ToolError as e:
             provenance["media_extraction_status"] = f"extraction failed: {e}"
     if not full_media and "media_extraction_status" not in provenance:
@@ -666,7 +693,7 @@ def save_carbon_source_media_records(bacdive_id: int, strain_name: str,
     for test in tests:
         ref_id = test["ref"]
         if ref_id not in resolved_by_ref:
-            resolved_by_ref[ref_id] = _resolve_reference(bacdive_id, record, ref_id)
+            resolved_by_ref[ref_id] = _resolve_reference(bacdive_id, record, ref_id, strain_name)
         resolved = resolved_by_ref[ref_id]
         carbon_sources.append({"carbon_source": test["metabolite"], "growth": test["growth"],
                               "full_media": resolved["full_media"], "provenance": resolved["provenance"]})

@@ -11,6 +11,10 @@
                              the instructions the extraction model was given, and its
                              output, judges whether that output faithfully reflects
                              what the paper itself says. Used by examples/eval_media.py.
+  judge_paper_has_media   -- does this paper state a medium's composition at all? Used
+                             by examples/eval_media.py to choose which papers are worth
+                             evaluating, independently of what any extraction method
+                             claims to have found.
 """
 
 from __future__ import annotations
@@ -69,6 +73,42 @@ JUDGE_MEDIA_SYSTEM = (
 )
 
 
+PAPER_HAS_MEDIA_SYSTEM = (
+    "You decide whether a scientific paper states the COMPOSITION of a culture medium -- "
+    "the actual ingredients a medium is made of, with or without amounts (e.g. 'per litre: "
+    "5 g peptone, 3 g yeast extract'). A medium merely NAMED (e.g. 'grown on ISP 2 agar', "
+    "'marine broth 2216'), or named alongside growth observations or test results, is NOT "
+    "a composition. Respond with ONLY a JSON object, no other text and no markdown fences: "
+    "{\"has_media\": <true|false>, \"reason\": \"<one sentence, citing specifics>\"}."
+)
+
+
+def judge_paper_has_media(judge_model, strain_name: str, paper_text: str) -> dict:
+    """Does this paper actually state a growth medium's composition? Used to pick which
+    papers are worth evaluating extraction on, INDEPENDENTLY of what any extraction
+    method reports.
+
+    Gating on an extraction method's own "found" instead would bias the whole eval: it
+    lets that method's false positives in (a datasheet naming 'Agar suter without
+    tyrosine' with no ingredients got accepted that way), and -- worse -- excludes the
+    single most valuable test case, a paper that really does contain a recipe the method
+    missed. Returns {"has_media": None, "reason": None, "raw_reply": ...} when the reply
+    isn't parseable JSON, so a bad call stays diagnosable."""
+    prompt = f"Strain the paper concerns: {strain_name}\n\nComplete paper text:\n{paper_text}"
+    # 600, not 300: the reason routinely quotes a whole ingredient list as evidence, and a
+    # truncated reply parses as has_media=None -- which a caller reads as "no medium here"
+    # and silently drops a paper that actually had one.
+    response = judge_model.complete(PAPER_HAS_MEDIA_SYSTEM, [{"role": "user", "content": prompt}],
+                                     tools=[], max_tokens=600)
+    raw = re.sub(r"^```(?:json)?\s*|\s*```\s*$", "", response.text.strip())
+    try:
+        parsed = json.loads(raw)
+        return {"has_media": bool(parsed["has_media"]), "reason": parsed.get("reason"),
+                "raw_reply": None}
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+        return {"has_media": None, "reason": None, "raw_reply": response.text}
+
+
 def judge_media_extraction(judge_model, strain_name: str, extraction_instructions: str,
                            paper_text: str, extraction_output: dict) -> dict:
     """LLM-as-judge for growth-medium extraction, with no hand-written ground truth: the
@@ -83,8 +123,11 @@ def judge_media_extraction(judge_model, strain_name: str, extraction_instruction
         f"Complete paper text:\n{paper_text}\n\n"
         f"Model's extracted output:\n{json.dumps(extraction_output, indent=2, ensure_ascii=False)}"
     )
+    # 900, not 400: the reason cites specific ingredients and amounts to justify the score,
+    # and 400 truncated it mid-list on exactly the papers with the most to say -- the score
+    # was already written by then, so the whole verdict was lost to an unparseable reply.
     response = judge_model.complete(JUDGE_MEDIA_SYSTEM, [{"role": "user", "content": prompt}],
-                                     tools=[], max_tokens=400)
+                                     tools=[], max_tokens=900)
     raw = re.sub(r"^```(?:json)?\s*|\s*```\s*$", "", response.text.strip())
     try:
         parsed = json.loads(raw)

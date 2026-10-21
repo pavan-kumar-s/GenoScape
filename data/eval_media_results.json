@@ -1,80 +1,1531 @@
 [
   {
-    "strain_name": "Streptomyces avicenniae 9-9",
-    "bacdive_id": 16460,
-    "ref_id": 29244,
-    "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
-    "doi_or_url": "10.1128/mSphere.00237-17",
+    "organism": "Brucella ligniniphila",
+    "doi": "10.3390/microorganisms14091923",
+    "pmcid": "PMC13609823",
+    "title": "Brucella ligniniphila sp. nov., a Novel Lignin-Degrading Bacterium from Decaying Bamboo, and Synergistic Lignin Biodegradation by Consortium with White-Rot Fungi.",
     "text_len": 20000,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper gives full ingredient lists for the enrichment medium (5 g alkaline lignin, 1 g KH2PO4, 2 g (NH4)2SO4, 0.5 g MgSO4, 0.01 g FeCl3, 0.1 g CaCl2 per 1000 mL water) and the lignin degradation medium (3 g AL, 2 g (NH4)2SO4, 1 g KH2PO4, 1 g K2HPO4, etc., per 1 L).",
+      "raw_reply": null
+    },
     "whole_text": {
       "method": "whole_text",
-      "input_tokens": 4533,
-      "output_tokens": 18,
-      "found": false,
-      "media": [],
+      "input_tokens": 5613,
+      "output_tokens": 526,
+      "found": true,
+      "media": [
+        {
+          "name": "enrichment medium",
+          "ingredients": [
+            {
+              "name": "alkaline lignin",
+              "amount": "5 g"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "1 g"
+            },
+            {
+              "name": "(NH4)2SO4",
+              "amount": "2 g"
+            },
+            {
+              "name": "MgSO4",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "FeCl3",
+              "amount": "0.01 g"
+            },
+            {
+              "name": "CaCl2",
+              "amount": "0.1 g"
+            },
+            {
+              "name": "distilled water",
+              "amount": "1000 mL"
+            },
+            {
+              "name": "nystatin",
+              "amount": "50 mg/L"
+            }
+          ],
+          "temperature": "30 °C",
+          "ph": null,
+          "notes": "Used for initial enrichment of Brucella ligniniphila"
+        },
+        {
+          "name": "lignin degradation medium",
+          "ingredients": [
+            {
+              "name": "alkaline lignin (AL)",
+              "amount": "3 g"
+            },
+            {
+              "name": "(NH4)2SO4",
+              "amount": "2 g"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "1 g"
+            },
+            {
+              "name": "K2HPO4",
+              "amount": "1 g"
+            },
+            {
+              "name": "MgSO4",
+              "amount": "0.2 g"
+            },
+            {
+              "name": "FeSO4",
+              "amount": "0.05 g"
+            },
+            {
+              "name": "MnSO4",
+              "amount": "0.002 g"
+            },
+            {
+              "name": "CuSO4",
+              "amount": "0.002 g"
+            },
+            {
+              "name": "NaCl",
+              "amount": "0.1 g"
+            },
+            {
+              "name": "CaCl2",
+              "amount": "0.1 g"
+            },
+            {
+              "name": "VB1",
+              "amount": "0.02 g"
+            },
+            {
+              "name": "Tween 80",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "distilled water",
+              "amount": "1 L"
+            }
+          ],
+          "temperature": "30 °C",
+          "ph": "7.0",
+          "notes": "With and without 1 g/L glucose addition"
+        }
+      ],
       "attempts": null,
+      "note": null,
       "error": null,
       "score": {
-        "accuracy": 1.0,
-        "reason": "The paper is a meta-analysis of IJSEM phenotype data and contains no medium composition whatsoever (only passing mentions of 'dilute medium' and agar autoclaving), so reporting found=false is correct.",
+        "accuracy": 0.97,
+        "reason": "Both compositions (enrichment medium and lignin degradation medium) are transcribed exactly as stated in the paper, including amounts, 30 °C incubation and pH 7.0, with no invented ingredients; LB medium is only named (composition cited to a reference) and correctly omitted.",
         "raw_reply": null
       }
     },
     "retrieval": {
       "method": "retrieval",
-      "input_tokens": 4215,
-      "output_tokens": 80,
-      "found": false,
-      "media": [],
-      "attempts": 5,
+      "input_tokens": 1363,
+      "output_tokens": 361,
+      "found": true,
+      "media": [
+        {
+          "name": "lignin degradation medium",
+          "ingredients": [
+            {
+              "name": "AL",
+              "amount": "3 g"
+            },
+            {
+              "name": "(NH4)2SO4",
+              "amount": "2 g"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "1 g"
+            },
+            {
+              "name": "K2HPO4",
+              "amount": "1 g"
+            },
+            {
+              "name": "MgSO4",
+              "amount": "0.2 g"
+            },
+            {
+              "name": "FeSO4",
+              "amount": "0.05 g"
+            },
+            {
+              "name": "MnSO4",
+              "amount": "0.002 g"
+            },
+            {
+              "name": "CuSO4",
+              "amount": "0.002 g"
+            },
+            {
+              "name": "NaCl",
+              "amount": "0.1 g"
+            },
+            {
+              "name": "CaCl2",
+              "amount": "0.1 g"
+            },
+            {
+              "name": "VB1",
+              "amount": "0.02 g"
+            },
+            {
+              "name": "Tween 80",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "distilled water",
+              "amount": "1 L"
+            }
+          ],
+          "temperature": "30 °C",
+          "ph": "7.0",
+          "notes": "cultures incubated at 150 rpm under shaking conditions"
+        }
+      ],
+      "attempts": 1,
+      "note": null,
       "error": null,
       "score": {
-        "accuracy": 1.0,
-        "reason": "The paper is a meta-analysis of IJSEM phenotypic data and contains no medium composition for Streptomyces avicenniae 9-9 (or any strain), so returning found=false with an empty media list is correct.",
+        "accuracy": 0.8,
+        "reason": "The reported lignin degradation medium matches the paper exactly (all 12 components, amounts, pH 7.0, 30 °C, 150 rpm), but the model omitted the other fully specified composition in the text — the enrichment medium (5 g alkaline lignin, 1 g KH2PO4, 2 g (NH4)2SO4, 0.5 g MgSO4, 0.01 g FeCl3, 0.1 g CaCl2, 1000 mL water, 50 mg/L nystatin, 30 °C) used to isolate the same strain.",
         "raw_reply": null
       }
     }
   },
   {
-    "strain_name": "Cryobacterium arcticum SK1",
-    "bacdive_id": 7305,
-    "ref_id": 69226,
-    "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
-    "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2022823.pdf",
-    "text_len": 5254,
+    "organism": "Halomonas shizuishanensis",
+    "doi": "10.3390/ijms27188335",
+    "pmcid": "PMC13607790",
+    "title": "Taxogenomic and Physiological Characterization of Halomonas shizuishanensis sp. nov. Reveals Osmotic-Adaptation Traits and an Ammonium-Utilization Phenotype.",
+    "text_len": 20000,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The Methods state the denitrifying medium (DM) composition per liter (4.7 g C4H4Na2O4·6H2O, 1.0 g KNO3, 7.9 g Na2HPO4·7H2O, 0.3 g NH4Cl, 0.1 g MgSO4·7H2O, pH 8.2, plus 2 mL trace element solution), as well as buffer compositions for pH-range media.",
+      "raw_reply": null
+    },
     "whole_text": {
       "method": "whole_text",
-      "input_tokens": 2535,
-      "output_tokens": 13,
-      "found": false,
-      "media": [],
+      "input_tokens": 5327,
+      "output_tokens": 227,
+      "found": true,
+      "media": [
+        {
+          "name": "denitrifying medium (DM)",
+          "ingredients": [
+            {
+              "name": "C4H4Na2O4·6H2O",
+              "amount": "4.7 g/L"
+            },
+            {
+              "name": "KNO3",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "Na2HPO4·7H2O",
+              "amount": "7.9 g/L"
+            },
+            {
+              "name": "NH4Cl",
+              "amount": "0.3 g/L"
+            },
+            {
+              "name": "MgSO4·7H2O",
+              "amount": "0.1 g/L"
+            },
+            {
+              "name": "trace element solution",
+              "amount": "2 mL/L"
+            }
+          ],
+          "temperature": "28 °C",
+          "ph": "8.2",
+          "notes": "Used for initial enrichment culture with shaking at 180 rpm for 7 days"
+        }
+      ],
       "attempts": null,
+      "note": null,
       "error": null,
       "score": {
-        "accuracy": 1.0,
-        "reason": "The paper only names media (ISP 2-7, GYM, Suter/SSM) without giving any compositions, so the model's 'found: false' is correct.",
+        "accuracy": 0.97,
+        "reason": "The DM composition (4.7 g C4H4Na2O4·6H2O, 1.0 g KNO3, 7.9 g Na2HPO4·7H2O, 0.3 g NH4Cl, 0.1 g MgSO4·7H2O, 2 mL trace element solution, pH 8.2, 28 °C) is reproduced exactly as stated, with nothing invented, and LB/BTB media correctly omitted since only named without composition.",
         "raw_reply": null
       }
     },
     "retrieval": {
       "method": "retrieval",
-      "input_tokens": 1209,
-      "output_tokens": 99,
+      "input_tokens": 2988,
+      "output_tokens": 254,
       "found": true,
       "media": [
         {
-          "name": "Agar suter without tyrosine",
+          "name": "denitrifying medium (DM)",
+          "ingredients": [
+            {
+              "name": "C4H4Na2O4·6H2O",
+              "amount": "4.7 g/L"
+            },
+            {
+              "name": "KNO3",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "Na2HPO4·7H2O",
+              "amount": "7.9 g/L"
+            },
+            {
+              "name": "NH4Cl",
+              "amount": "0.3 g/L"
+            },
+            {
+              "name": "MgSO4·7H2O",
+              "amount": "0.1 g/L"
+            },
+            {
+              "name": "trace element solution",
+              "amount": "2 mL/L"
+            }
+          ],
+          "temperature": "28°C",
+          "ph": "8.2",
+          "notes": "incubated with shaking at 180 rpm for 7 d"
+        }
+      ],
+      "attempts": 3,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.98,
+        "reason": "The extraction exactly reproduces the only composition stated in the paper (denitrifying medium DM: 4.7 g C4H4Na2O4·6H2O, 1.0 g KNO3, 7.9 g Na2HPO4·7H2O, 0.3 g NH4Cl, 0.1 g MgSO4·7H2O, 2 mL trace element solution, pH 8.2, 28 °C/180 rpm), with nothing invented, and correctly omits LB agar/BTB agar, whose compositions are not given in the text.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Desulfovibrio intestinivivus",
+    "doi": "10.1099/ijsem.0.007296",
+    "pmcid": "PMC13609909",
+    "title": "Expanding the diversity of Desulfovibrio from the human gut: Desulfovibrio intestinivivus sp. nov., Desulfovibrio desulfopostgatei sp. nov. and Desulfovibrio faecalis sp. nov.",
+    "text_len": 19471,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper gives the full per-litre composition of Postgate C medium (6 g sodium lactate, 4.5 g Na2SO4, 1 g NH4Cl, 1 g yeast extract, 0.5 g KH2PO4, 0.3 g sodium citrate, 0.06 g MgSO4·7H2O, FeSO4·7H2O solution, 0.04 g CaCl2·2H2O, 0.5 g cysteine HCl and resazurin) used for isolation and characterization.",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 6341,
+      "output_tokens": 489,
+      "found": true,
+      "media": [
+        {
+          "name": "Postgate C medium",
+          "ingredients": [
+            {
+              "name": "sodium lactate",
+              "amount": "6 g/L"
+            },
+            {
+              "name": "Na2SO4 (sodium sulphate)",
+              "amount": "4.5 g/L"
+            },
+            {
+              "name": "NH4Cl",
+              "amount": "1 g/L"
+            },
+            {
+              "name": "yeast extract (Oxoid)",
+              "amount": "1 g/L"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "sodium citrate",
+              "amount": "0.3 g/L"
+            },
+            {
+              "name": "MgSO4.7H2O",
+              "amount": "0.06 g/L"
+            },
+            {
+              "name": "FeSO4.7H2O",
+              "amount": "1 ml/L (0.4 g in 100 ml H2O)"
+            },
+            {
+              "name": "CaCl2.2H2O",
+              "amount": "0.04 g/L"
+            },
+            {
+              "name": "cysteine HCl",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "resazurin",
+              "amount": "4 ml/L (0.2 g/L)"
+            },
+            {
+              "name": "ultra-pure water",
+              "amount": "1 L"
+            }
+          ],
+          "temperature": "37°C",
+          "ph": null,
+          "notes": "anaerobic medium"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.97,
+        "reason": "All eleven Postgate C ingredients and amounts match the paper exactly, with correct 37 °C incubation and anaerobic note; pH is null which is acceptable since the paper gives no medium pH (only tolerance ranges/optimum pH 7.5 for the strain).",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 1031,
+      "output_tokens": 347,
+      "found": true,
+      "media": [
+        {
+          "name": "Postgate C medium",
+          "ingredients": [
+            {
+              "name": "sodium lactate",
+              "amount": "6 g/L"
+            },
+            {
+              "name": "Na2SO4 (sodium sulphate)",
+              "amount": "4.5 g/L"
+            },
+            {
+              "name": "NH4Cl",
+              "amount": "1 g/L"
+            },
+            {
+              "name": "yeast extract (Oxoid)",
+              "amount": "1 g/L"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "sodium citrate",
+              "amount": "0.3 g/L"
+            },
+            {
+              "name": "MgSO4.7H2O",
+              "amount": "0.06 g/L"
+            },
+            {
+              "name": "FeSO4.7H2O",
+              "amount": "0.4 g in 100 ml H2O, 1 ml/L"
+            },
+            {
+              "name": "CaCl2.2H2O",
+              "amount": "0.04 g/L"
+            },
+            {
+              "name": "cysteine HCl",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "resazurin",
+              "amount": "4 ml/L of 0.2 g/L solution"
+            }
+          ],
+          "temperature": "37 °C",
+          "ph": null,
+          "notes": "anaerobic conditions, ultra-pure water used as base"
+        }
+      ],
+      "attempts": 1,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 1.0,
+        "reason": "All eleven Postgate C ingredients and amounts (6 g sodium lactate, 4.5 g Na2SO4, 1 g NH4Cl, 1 g yeast extract, 0.5 g KH2PO4, 0.3 g sodium citrate, 0.06 g MgSO4·7H2O, 1 ml FeSO4·7H2O stock, 0.04 g CaCl2·2H2O, 0.5 g cysteine HCl, 4 ml resazurin) match the paper verbatim, the 37 °C anaerobic incubation is correct, and pH is properly left null since the paper gives no medium pH.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Rhodococcus folensis",
+    "doi": "10.1038/s41598-026-58503-0",
+    "pmcid": "PMC13562592",
+    "title": "Rhodococcus folensis sp. nov., an orange-red-pigmented bacterium from mining soil.",
+    "text_len": 20000,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper gives the full R2A isolation medium composition per litre (yeast extract 0.5 g, peptone 0.5 g, casamino acids 0.5 g, glucose 0.5 g, starch 0.5 g, sodium pyruvate 0.3 g, K2HPO4 0.3 g, MgSO4·7H2O 0.5 g, agar 18 g, pH 7.2), beyond merely naming media.",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 5262,
+      "output_tokens": 329,
+      "found": true,
+      "media": [
+        {
+          "name": "R2A agar",
+          "ingredients": [
+            {
+              "name": "yeast extract",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "peptone",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "casamino acids",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "glucose",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "starch",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "sodium pyruvate",
+              "amount": "0.3 g"
+            },
+            {
+              "name": "K₂HPO₄",
+              "amount": "0.3 g"
+            },
+            {
+              "name": "MgSO₄·7 H₂O",
+              "amount": "0.5 g"
+            },
+            {
+              "name": "agar (Difco)",
+              "amount": "18 g"
+            },
+            {
+              "name": "distilled water",
+              "amount": "1000 ml"
+            },
+            {
+              "name": "cycloheximide",
+              "amount": "50 µg/ml"
+            },
+            {
+              "name": "nalidixic acid",
+              "amount": "10 µg/ml"
+            },
+            {
+              "name": "nystatin",
+              "amount": "50 µg/ml"
+            }
+          ],
+          "temperature": "28 °C",
+          "ph": "7.2",
+          "notes": "Incubated for 10 days"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.95,
+        "reason": "All R2A ingredients, amounts, pH 7.2, 28 °C incubation and antibiotic supplements match the paper exactly; only minor quibble is including the antibiotics as base ingredients rather than a note.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 1434,
+      "output_tokens": 347,
+      "found": true,
+      "media": [
+        {
+          "name": "R2A agar",
+          "ingredients": [
+            {
+              "name": "yeast extract",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "peptone",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "casamino acids",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "glucose",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "starch",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "sodium pyruvate",
+              "amount": "0.3 g/L"
+            },
+            {
+              "name": "K₂HPO₄",
+              "amount": "0.3 g/L"
+            },
+            {
+              "name": "MgSO₄·7 H₂O",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "agar (Difco)",
+              "amount": "18 g/L"
+            },
+            {
+              "name": "distilled water",
+              "amount": "1000 ml"
+            },
+            {
+              "name": "cycloheximide",
+              "amount": "50 µg/ml"
+            },
+            {
+              "name": "nalidixic acid",
+              "amount": "10 µg/ml"
+            },
+            {
+              "name": "nystatin",
+              "amount": "50 µg/ml"
+            }
+          ],
+          "temperature": "28 °C",
+          "ph": "7.2",
+          "notes": "Incubated for 10 days"
+        }
+      ],
+      "attempts": 1,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.97,
+        "reason": "The R2A composition, antibiotic supplements, pH 7.2, and 28 °C/10 days incubation all match the paper exactly; only minor quibble is including antibiotics as ingredients (stated in the paper) while routine cultivation media (nutrient agar/broth, 25 °C) have no composition given in the text.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Dechloromonas parva",
+    "doi": "10.4014/jmb.2602.02044",
+    "pmcid": "PMC13550009",
+    "title": "Dechloromonas parva sp. nov., a Member of the Family Azonexaceae.",
+    "text_len": 16539,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper specifies the full composition of a basal medium used for electron donor/acceptor tests: yeast extract (0.05%), proteose peptone no. 3 (0.05%), casamino acids (0.05%), dipotassium phosphate (0.03%), magnesium sulfate (0.005%), and agar (1.5%), plus defined supplement concentrations.",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 5136,
+      "output_tokens": 493,
+      "found": true,
+      "media": [
+        {
+          "name": "R2A agar",
           "ingredients": [],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "Used for isolation, colonial morphology examination, and growth testing of Dechloromonas parva"
+        },
+        {
+          "name": "R2A with potassium nitrate",
+          "ingredients": [
+            {
+              "name": "potassium nitrate",
+              "amount": "0.084%"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "Anaerobic growth evaluation"
+        },
+        {
+          "name": "R2A with potassium chlorate",
+          "ingredients": [
+            {
+              "name": "potassium chlorate",
+              "amount": "10 mM"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "Anaerobic growth evaluation"
+        },
+        {
+          "name": "R2A with sodium fumarate",
+          "ingredients": [
+            {
+              "name": "sodium fumarate",
+              "amount": "10 mM"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "Anaerobic growth evaluation"
+        },
+        {
+          "name": "R2A with Fe(III)-pyrophosphate",
+          "ingredients": [
+            {
+              "name": "Fe(III)-pyrophosphate",
+              "amount": "0.3%"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "Anaerobic growth evaluation"
+        },
+        {
+          "name": "Basal medium for electron donor/acceptor testing",
+          "ingredients": [
+            {
+              "name": "yeast extract",
+              "amount": "0.05%"
+            },
+            {
+              "name": "proteose peptone no. 3",
+              "amount": "0.05%"
+            },
+            {
+              "name": "casamino acids",
+              "amount": "0.05%"
+            },
+            {
+              "name": "dipotassium phosphate",
+              "amount": "0.03%"
+            },
+            {
+              "name": "magnesium sulfate",
+              "amount": "0.005%"
+            },
+            {
+              "name": "agar",
+              "amount": "1.5%"
+            }
+          ],
           "temperature": null,
           "ph": null,
-          "notes": "Growth (G): good; Reverse (R): zinc yellow (1018); Aerial (A): none; Substrate (S): none"
+          "notes": "Used to test utilization of electron donors and acceptors"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.5,
+        "reason": "The basal medium composition (yeast extract 0.05%, proteose peptone no. 3 0.05%, casamino acids 0.05%, dipotassium phosphate 0.03%, magnesium sulfate 0.005%, agar 1.5%) is accurately transcribed, but the model also listed 'R2A agar' with an empty ingredient list and four 'R2A + supplement' entries whose base composition the paper never gives — these are name-only media that the instructions explicitly say do not count as compositions.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 909,
+      "output_tokens": 210,
+      "found": true,
+      "media": [
+        {
+          "name": "Basal medium",
+          "ingredients": [
+            {
+              "name": "yeast extract",
+              "amount": "0.05%"
+            },
+            {
+              "name": "proteose peptone no. 3",
+              "amount": "0.05%"
+            },
+            {
+              "name": "casamino acids",
+              "amount": "0.05%"
+            },
+            {
+              "name": "dipotassium phosphate",
+              "amount": "0.03%"
+            },
+            {
+              "name": "magnesium sulfate",
+              "amount": "0.005%"
+            },
+            {
+              "name": "agar",
+              "amount": "1.5%"
+            }
+          ],
+          "temperature": null,
+          "ph": null,
+          "notes": "Used for electron donor and acceptor utilization tests with various additions of acetate, propionate, pyruvate, starch, Fe(III)-pyrophosphate, nitrate, chlorate, and fumarate"
+        }
+      ],
+      "attempts": 1,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.9,
+        "reason": "The only explicit composition in the paper is the basal medium for electron donor/acceptor tests, and the model reproduced all six ingredients and amounts (yeast extract 0.05%, proteose peptone no. 3 0.05%, casamino acids 0.05%, dipotassium phosphate 0.03%, magnesium sulfate 0.005%, agar 1.5%) exactly, correctly leaving temperature/pH null and inventing nothing, though it reported a test medium rather than noting the primary growth medium R2A agar whose composition is indeed not given.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Brachybacterium netajii",
+    "doi": "10.1038/s41598-026-56775-0",
+    "pmcid": "PMC13538518",
+    "title": "Polyphasic taxonomic characterization of Brachybacterium netajii sp. nov., a metabolically versatile bacterium isolated from the river Ganges, India.",
+    "text_len": 20000,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper specifies the composition of the sucrose low-phosphate (SLP) basal broth used for heavy-metal tolerance assays: 1% sucrose, 0.05% MgSO4·7H2O, 0.01% NaCl, 0.1% (NH4)2SO4, and 0.05% yeast extract at pH 7.0.",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 6325,
+      "output_tokens": 282,
+      "found": true,
+      "media": [
+        {
+          "name": "minimal medium (MM)",
+          "ingredients": [
+            {
+              "name": "2,4-dinitrophenol (DNP)",
+              "amount": "0.25 mM"
+            },
+            {
+              "name": "agar",
+              "amount": "1.5% (w/v)"
+            }
+          ],
+          "temperature": null,
+          "ph": null,
+          "notes": "supplemented with DNP, followed by PNP as sole carbon source; solidified with agar when required"
+        },
+        {
+          "name": "Sucrose low-phosphate (SLP) broth",
+          "ingredients": [
+            {
+              "name": "sucrose",
+              "amount": "1%"
+            },
+            {
+              "name": "MgSO₄·7H₂O",
+              "amount": "0.05%"
+            },
+            {
+              "name": "NaCl",
+              "amount": "0.01%"
+            },
+            {
+              "name": "(NH₄)₂SO₄",
+              "amount": "0.1%"
+            },
+            {
+              "name": "yeast extract",
+              "amount": "0.05%"
+            }
+          ],
+          "temperature": "28 °C",
+          "ph": "7.0",
+          "notes": "used for heavy metal tolerance assessment; incubated for 72 h"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.7,
+        "reason": "The SLP broth composition (1% sucrose, 0.05% MgSO4·7H2O, 0.01% NaCl, 0.1% (NH4)2SO4, 0.05% yeast extract, pH 7.0, 28 °C) is reproduced exactly as stated, but the model also listed 'minimal medium (MM)' as a medium whose composition the paper never gives, presenting only the 0.25 mM DNP supplement and 1.5% agar as if they were its ingredients.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 2365,
+      "output_tokens": 191,
+      "found": true,
+      "media": [
+        {
+          "name": "Sucrose low-phosphate (SLP) broth",
+          "ingredients": [
+            {
+              "name": "sucrose",
+              "amount": "1%"
+            },
+            {
+              "name": "MgSO₄·7H₂O",
+              "amount": "0.05%"
+            },
+            {
+              "name": "NaCl",
+              "amount": "0.01%"
+            },
+            {
+              "name": "(NH₄)₂SO₄",
+              "amount": "0.1%"
+            },
+            {
+              "name": "yeast extract",
+              "amount": "0.05%"
+            }
+          ],
+          "temperature": "28°C",
+          "ph": "7.0",
+          "notes": "Basal medium for heavy metal tolerance assays"
         }
       ],
       "attempts": 2,
+      "note": null,
       "error": null,
       "score": {
-        "accuracy": 0.0,
-        "reason": "The paper only names media (ISP 2–7, Suter agar, GYM) without giving any composition, so the correct answer was {\"found\": false}; the model reported found=true with a medium having an empty ingredient list and only growth-observation notes.",
+        "accuracy": 0.97,
+        "reason": "The only composition actually stated in the paper is the SLP broth (1% sucrose, 0.05% MgSO4·7H2O, 0.01% NaCl, 0.1% (NH4)2SO4, 0.05% yeast extract, pH 7.0, incubated at 28 °C), and the output reproduces it exactly without inventing compositions for the named-only media (MM, TSB, TSA).",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Nocardioides segetis",
+    "doi": "10.1099/ijsem.0.007160",
+    "pmcid": "PMC13374528",
+    "title": "Nocardioides segetis sp. nov., isolated from the sandy soil of a long-term continuous cropping cotton field.",
+    "text_len": 18209,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper gives the full composition of the mineral salt medium used for hexadecane degradation testing: per litre NH4NO3 1.0 g, KH2PO4 1.0 g, Na2HPO4 1.0 g, MgSO4·7H2O 0.2 g, CaCl2 0.02 g, FeCl3 0.001 g at pH 7.0, plus 0.2% (v/v) hexadecane as sole carbon source.",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 6072,
+      "output_tokens": 416,
+      "found": true,
+      "media": [
+        {
+          "name": "R2A agar",
+          "ingredients": [],
+          "temperature": "30°C",
+          "ph": null,
+          "notes": "Reasoner's 2A agar (BD/Difco); used for initial isolation and maintenance"
+        },
+        {
+          "name": "Mineral Salt Medium (MSM)",
+          "ingredients": [
+            {
+              "name": "NH4NO3",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "Na2HPO4",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "MgSO4·7H2O",
+              "amount": "0.2 g/L"
+            },
+            {
+              "name": "CaCl2",
+              "amount": "0.02 g/L"
+            },
+            {
+              "name": "FeCl3",
+              "amount": "0.001 g/L"
+            },
+            {
+              "name": "Hexadecane",
+              "amount": "0.2% (v/v)"
+            }
+          ],
+          "temperature": "30°C",
+          "ph": "7.0",
+          "notes": "Used to test hexadecane degradation as sole carbon source; incubated with shaking at 160 r.p.m. for 7 days"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.8,
+        "reason": "The MSM composition (NH4NO3 1.0 g, KH2PO4 1.0 g, Na2HPO4 1.0 g, MgSO4·7H2O 0.2 g, CaCl2 0.02 g, FeCl3 0.001 g per litre, pH 7.0, hexadecane 0.2%, 30 °C) matches the paper exactly, but it also listed R2A agar as a medium with an empty ingredient list even though the paper only names it, contrary to the instruction that a name alone is not a composition.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 1692,
+      "output_tokens": 326,
+      "found": true,
+      "media": [
+        {
+          "name": "R2A medium",
+          "ingredients": [],
+          "temperature": null,
+          "ph": null,
+          "notes": null
+        },
+        {
+          "name": "Luria–Bertani (LB) broth",
+          "ingredients": [],
+          "temperature": null,
+          "ph": null,
+          "notes": "NaCl-free with variable NaCl concentrations"
+        },
+        {
+          "name": "Mineral salt medium (MSM)",
+          "ingredients": [
+            {
+              "name": "NH4NO3",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "Na2HPO4",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "MgSO4·7H2O",
+              "amount": "0.2 g/L"
+            },
+            {
+              "name": "CaCl2",
+              "amount": "0.02 g/L"
+            },
+            {
+              "name": "FeCl3",
+              "amount": "0.001 g/L"
+            },
+            {
+              "name": "hexadecane",
+              "amount": "0.2% (v/v)"
+            }
+          ],
+          "temperature": "30 °C",
+          "ph": "7.0"
+        },
+        {
+          "name": "tryptic soy agar medium",
+          "ingredients": [],
+          "temperature": "30 °C",
+          "ph": null
+        }
+      ],
+      "attempts": 1,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.7,
+        "reason": "The MSM composition (NH4NO3 1.0 g, KH2PO4 1.0 g, Na2HPO4 1.0 g, MgSO4·7H2O 0.2 g, CaCl2 0.02 g, FeCl3 0.001 g per litre, pH 7.0, hexadecane 0.2%, 30 °C) is transcribed exactly as the paper states, but the output also lists R2A, LB broth and tryptic soy agar as media entries with empty ingredient lists, which the instructions explicitly say are mere names and not compositions.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Idiomarina solivarensis",
+    "doi": "10.1007/s00203-026-05004-3",
+    "pmcid": "PMC13272253",
+    "title": "Idiomarina solivarensis sp. nov., halophilic bacterium isolated from brine of the former subsurface salt mine in Solivar (Slovakia) showing a unique fatty acids profile.",
+    "text_len": 20000,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper gives the explicit composition of the nitrate agar ('5.0 g/L peptone, 3.0 g/L yeast extract, 15.0 g/L agar, 1.0 g/L potassium nitrate and 50.0 g/L NaCl'), beyond merely naming media like R2A or TSB.",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 6503,
+      "output_tokens": 573,
+      "found": true,
+      "media": [
+        {
+          "name": "R2A medium",
+          "ingredients": [
+            {
+              "name": "NaCl",
+              "amount": "5.0% w/v"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "used for primary isolation and cultivation of strain HP20-50T"
+        },
+        {
+          "name": "TSB medium",
+          "ingredients": [
+            {
+              "name": "NaCl",
+              "amount": "5.0% w/v"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "used for cultivation analyses including temperature, salinity, and pH testing"
+        },
+        {
+          "name": "LB medium",
+          "ingredients": [
+            {
+              "name": "NaCl",
+              "amount": "5.0% w/v"
+            },
+            {
+              "name": "citric acid",
+              "amount": null
+            },
+            {
+              "name": "phosphate buffer",
+              "amount": null
+            },
+            {
+              "name": "glycine-NaOH buffer",
+              "amount": null
+            }
+          ],
+          "temperature": "25°C",
+          "ph": "5.0-10.0",
+          "notes": "buffered with citric acid (pH 5.0-6.0), phosphate buffer (pH 6.5-8.0), and glycine-NaOH buffer (pH 8.5-10.0); used for pH preference testing"
+        },
+        {
+          "name": "nitrate agar",
+          "ingredients": [
+            {
+              "name": "peptone",
+              "amount": "5.0 g/L"
+            },
+            {
+              "name": "yeast extract",
+              "amount": "3.0 g/L"
+            },
+            {
+              "name": "agar",
+              "amount": "15.0 g/L"
+            },
+            {
+              "name": "potassium nitrate",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "NaCl",
+              "amount": "50.0 g/L"
+            }
+          ],
+          "temperature": null,
+          "ph": null,
+          "notes": "used for nitrate reduction activity assessment under anaerobic conditions"
+        },
+        {
+          "name": "Marine broth medium",
+          "ingredients": [
+            {
+              "name": "NaCl",
+              "amount": "5.0% w/v"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "used for fatty acids analysis"
+        },
+        {
+          "name": "R2A Broth medium",
+          "ingredients": [
+            {
+              "name": "NaCl",
+              "amount": "5.0% w/v"
+            }
+          ],
+          "temperature": "25°C",
+          "ph": null,
+          "notes": "used for fatty acids analysis"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.45,
+        "reason": "Only the nitrate agar composition (peptone 5.0 g/L, yeast extract 3.0 g/L, agar 15.0 g/L, potassium nitrate 1.0 g/L, NaCl 50.0 g/L) is actually given in the paper and was correctly captured, but the model additionally listed five commercial media (R2A, TSB, LB, Marine broth, R2A broth) as 'compositions' whose only 'ingredient' is the 5.0% NaCl supplement, which the instructions explicitly say does not count as a composition.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 2520,
+      "output_tokens": 528,
+      "found": true,
+      "media": [
+        {
+          "name": "TSB medium",
+          "ingredients": [
+            {
+              "name": "TSB (Merck KGaA, Germany)",
+              "amount": null
+            },
+            {
+              "name": "NaCl",
+              "amount": "5.0% (w/v)"
+            }
+          ],
+          "temperature": null,
+          "ph": null,
+          "notes": "Primary cultivation medium used for growth analyses"
+        },
+        {
+          "name": "LB medium",
+          "ingredients": [
+            {
+              "name": "LB (Merck KGaA, Germany)",
+              "amount": null
+            },
+            {
+              "name": "citric acid",
+              "amount": null
+            },
+            {
+              "name": "phosphate buffer",
+              "amount": null
+            },
+            {
+              "name": "glycine–NaOH buffer",
+              "amount": null
+            }
+          ],
+          "temperature": null,
+          "ph": "5.0–10.0",
+          "notes": "Used for pH preference testing with different buffers"
+        },
+        {
+          "name": "nitrate agar",
+          "ingredients": [
+            {
+              "name": "peptone",
+              "amount": "5.0 g/L"
+            },
+            {
+              "name": "yeast extract",
+              "amount": "3.0 g/L"
+            },
+            {
+              "name": "agar",
+              "amount": "15.0 g/L"
+            },
+            {
+              "name": "potassium nitrate",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "NaCl",
+              "amount": "50.0 g/L"
+            }
+          ],
+          "temperature": null,
+          "ph": null,
+          "notes": "Used for nitrate reduction activity assessment"
+        }
+      ],
+      "attempts": 2,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.5,
+        "reason": "The nitrate agar composition (5.0 g/L peptone, 3.0 g/L yeast extract, 15.0 g/L agar, 1.0 g/L potassium nitrate, 50.0 g/L NaCl) is reported accurately, but the model also invented 'compositions' for TSB and LB, which the paper only names (commercial products with 5% NaCl supplement/buffers), violating the rule that a medium name alone is not a composition.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Cellulomonas electrica",
+    "doi": "10.1007/s10482-026-02356-0",
+    "pmcid": "PMC13263276",
+    "title": "Cellulomonas electrica sp. nov., isolated from an electrochemical enrichment culture.",
+    "text_len": 20000,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper lists explicit ingredient compositions for two media: CMC-Na agar (g L−1: 5.0 CMC-Na, 1.0 KNO3, 0.5 MgSO4·5H2O, 0.01 FeSO4·7H2O, 1.0 tryptone, 15.0 agar) and the defined medium DM (g L−1: 1.0 NH4Cl, 0.8 MgCl2·6H2O, 0.1 CaCl2·2H2O, 0.5 KH2PO4, 1.0 NaHCO3), plus buffer formulations for pH-range R2A.",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 6989,
+      "output_tokens": 410,
+      "found": true,
+      "media": [
+        {
+          "name": "R2A",
+          "ingredients": [],
+          "temperature": null,
+          "ph": null,
+          "notes": "Used for growth range determination and cultivation, but specific composition not provided in excerpt"
+        },
+        {
+          "name": "CMC-Na agar",
+          "ingredients": [
+            {
+              "name": "CMC-Na",
+              "amount": "5.0 g/L"
+            },
+            {
+              "name": "KNO3",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "MgSO4·5H2O",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "FeSO4·7H2O",
+              "amount": "0.01 g/L"
+            },
+            {
+              "name": "tryptone",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "agar",
+              "amount": "15.0 g/L"
+            }
+          ],
+          "temperature": "30°C",
+          "ph": null,
+          "notes": "Used for cellulose degradation assessment"
+        },
+        {
+          "name": "DM (defined medium)",
+          "ingredients": [
+            {
+              "name": "NH4Cl",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "MgCl2·6H2O",
+              "amount": "0.8 g/L"
+            },
+            {
+              "name": "CaCl2·2H2O",
+              "amount": "0.1 g/L"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "NaHCO3",
+              "amount": "1.0 g/L"
+            }
+          ],
+          "temperature": "30°C",
+          "ph": null,
+          "notes": "Used as electrolyte for electrochemical measurements"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.8,
+        "reason": "The CMC-Na agar and defined medium (DM) compositions and 30 °C temperatures are transcribed exactly as stated in the paper, but the model also listed R2A as a 'found' medium with an empty ingredient list even though the paper gives only its name, contrary to the instruction that a name alone is not a composition.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 1669,
+      "output_tokens": 347,
+      "found": true,
+      "media": [
+        {
+          "name": "CMC-Na agar",
+          "ingredients": [
+            {
+              "name": "CMC-Na",
+              "amount": "5.0 g/L"
+            },
+            {
+              "name": "KNO3",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "MgSO4·5H2O",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "FeSO4·7H2O",
+              "amount": "0.01 g/L"
+            },
+            {
+              "name": "tryptone",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "agar",
+              "amount": "15.0 g/L"
+            }
+          ],
+          "temperature": "30 °C",
+          "ph": null,
+          "notes": null
+        },
+        {
+          "name": "Defined medium (DM)",
+          "ingredients": [
+            {
+              "name": "NH4Cl",
+              "amount": "1.0 g/L"
+            },
+            {
+              "name": "MgCl2·6H2O",
+              "amount": "0.8 g/L"
+            },
+            {
+              "name": "CaCl2·2H2O",
+              "amount": "0.1 g/L"
+            },
+            {
+              "name": "KH2PO4",
+              "amount": "0.5 g/L"
+            },
+            {
+              "name": "NaHCO3",
+              "amount": "1.0 g/L"
+            }
+          ],
+          "temperature": null,
+          "ph": null,
+          "notes": null
+        }
+      ],
+      "attempts": 1,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.95,
+        "reason": "Both compositions actually stated in the paper for strain NTE-D12T (CMC-Na agar and the defined medium DM) are reproduced with exactly the listed ingredients and g/L amounts, nothing invented, and R2A/Gifu media correctly omitted since their compositions are not given; only trivial omission is the 30 °C electrochemical measurement temperature for DM.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "organism": "Niallia yueguangensis",
+    "doi": "10.1186/s12866-026-05066-9",
+    "pmcid": "PMC13224414",
+    "title": "Niallia yueguangensis sp. nov., a novel bacterium from maize rhizosphere in saline-alkaline soil enhancing plant salt tolerance.",
+    "text_len": 20000,
+    "has_media_gate": {
+      "has_media": true,
+      "reason": "The paper gives the explicit composition of the isolation medium 'Lysogeny Broth (LB; containing 10 g/L tryptone, 5 g/L yeast extract, 10 g/L NaCl, and 15 g/L agar)', plus ingredient concentrations for hydrolysis test media (3.0% skim milk powder, 1.0% starch in LB basal agar).",
+      "raw_reply": null
+    },
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 5977,
+      "output_tokens": 138,
+      "found": true,
+      "media": [
+        {
+          "name": "Lysogeny Broth (LB)",
+          "ingredients": [
+            {
+              "name": "tryptone",
+              "amount": "10 g/L"
+            },
+            {
+              "name": "yeast extract",
+              "amount": "5 g/L"
+            },
+            {
+              "name": "NaCl",
+              "amount": "10 g/L"
+            },
+            {
+              "name": "agar",
+              "amount": "15 g/L"
+            }
+          ],
+          "temperature": "28°C",
+          "ph": null,
+          "notes": "used for isolation and cultivation of strains"
+        }
+      ],
+      "attempts": null,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.95,
+        "reason": "The paper explicitly states LB contains 10 g/L tryptone, 5 g/L yeast extract, 10 g/L NaCl, 15 g/L agar with incubation at 28 °C, all of which match exactly; only the stated optimum pH 7.0 was omitted and R2A (no composition given) correctly excluded.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 1123,
+      "output_tokens": 167,
+      "found": true,
+      "media": [
+        {
+          "name": "Lysogeny Broth (LB)",
+          "ingredients": [
+            {
+              "name": "tryptone",
+              "amount": "10 g/L"
+            },
+            {
+              "name": "yeast extract",
+              "amount": "5 g/L"
+            },
+            {
+              "name": "NaCl",
+              "amount": "10 g/L"
+            },
+            {
+              "name": "agar",
+              "amount": "15 g/L"
+            }
+          ],
+          "temperature": null,
+          "ph": null,
+          "notes": null
+        },
+        {
+          "name": "Reasoner's 2 A (R2A)",
+          "ingredients": [],
+          "temperature": null,
+          "ph": null,
+          "notes": "BD Difco"
+        }
+      ],
+      "attempts": 1,
+      "note": null,
+      "error": null,
+      "score": {
+        "accuracy": 0.85,
+        "reason": "LB composition (10 g/L tryptone, 5 g/L yeast extract, 10 g/L NaCl, 15 g/L agar) is transcribed exactly as the paper states, but the model omitted the stated incubation/optimum temperature of 28 °C (and optimum pH 7.0) and included an extra R2A entry with no ingredients, which by the instructions is not a composition.",
         "raw_reply": null
       }
     }

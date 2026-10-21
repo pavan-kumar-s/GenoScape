@@ -41,19 +41,19 @@ looking the organism up, checking its known growth data, and reading papers.
 ## 4. Get your results
 
 Each organism gets one file under `data/strain_media/`, named after the
-strain and its NCBI ID, e.g. `data/strain_media/escherichia_coli_562.json`.
+strain and its NCBI ID, e.g. `data/strain_media/acetobacter_cerevisiae_178900.json`.
 It lists every carbon source tested, with the growth medium pulled from the
 paper for each one:
 
 ```json
 {
-  "strain_name": "Escherichia coli",
-  "ncbi_id": "562",
-  "strain_id": 4434,
-  "genome": "GCA_900699165",
+  "strain_name": "Acetobacter cerevisiae",
+  "ncbi_id": "178900",
+  "strain_id": 12,
+  "genome": "GCA_001580535",
   "carbon_sources": [
     {
-      "carbon_source": "glucose",
+      "carbon_source": "glycerol",
       "growth": true,
       "full_media": [
         {"name": "GYC medium", "ingredients": [{"name": "glucose", "amount": "50 g/l"}],
@@ -61,7 +61,7 @@ paper for each one:
       ],
       "provenance": {"reference_title": "...", "doi": "..."}
     },
-    {"carbon_source": "citrate", "growth": false, "full_media": [], "provenance": {"...": "..."}}
+    {"carbon_source": "ethanol", "growth": false, "full_media": [], "provenance": {"...": "..."}}
   ]
 }
 ```

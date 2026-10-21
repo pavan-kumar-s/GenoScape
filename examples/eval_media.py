@@ -1,78 +1,57 @@
-"""Compare two ways of parsing culture-medium composition out of a paper's text:
+"""Evaluate GenoScape's growth-medium extraction -- extract_media_composition (the
+retrieval method save_carbon_source_media_records actually uses: rank paragraphs by
+concentration-unit density, verify + extract from the best one) vs
+extract_media_composition_whole_text (upload the entire paper in one call) -- on 5 real
+papers that actually describe a growth medium's composition.
 
-  1. whole_text -- my_tools.extract_media_composition_whole_text: upload the
-     entire text to an LLM in one call.
-  2. retrieval  -- my_tools.extract_media_composition (the method actually used by
-     save_carbon_source_media_records): rank paragraphs by concentration-unit
-     density, verify + extract from the best one, retry the next-best if not found.
+No hand-written ground truth, and no pre-built list of strains: this samples random
+BacDive strains (no filtering on title or content -- whatever reference BacDive cites
+is what the real pipeline would hit too) until it has found 5 DISTINCT references that
+(a) resolve to real text via PMC or an actual PDF -- a scraped HTML landing page is
+rejected; re-fetching the same DOI minutes apart was observed to flip between real
+article text and mostly site-navigation chrome -- and (b) the retrieval method itself
+confirms actually describes a growth medium, so every paper this evaluates genuinely
+has media info to compare the two methods against, not just "paper resolved, but
+describes nothing."
+
+For each of those 5 papers: both methods' output is judged by an LLM that reads the
+complete paper text itself, the exact instructions the extraction model was given, and
+the output, and scores how faithfully that output reflects what the paper actually
+says (see examples/judge.py:judge_media_extraction) -- no hand-written ground truth.
 
     python -m examples.eval_media
 
-Runs both methods on one real citation (see CITATION below -- a real species-
-description paper, fetched the same way the pipeline would fetch it), reports
-token usage for each, and -- once data/media_ground_truth.json has been filled
-in by hand -- also scores each method's extracted ingredients against it.
+Writes data/eval_media_results.json.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
+import os
+import random
 from pathlib import Path
 
-from examples.Genoscape import load_env
-from examples.my_tools import (ToolError, get_pubmed_reference_text,
-                               extract_media_composition, extract_media_composition_whole_text)
+from examples.build_ground_truth import _strain_name
+from examples.Genoscape import load_env, make_model
+from examples.judge import judge_media_extraction
+from examples.my_tools import (EXTRACTION_SYSTEM, ToolError, _fetch_bacdive_record,
+                               _resolve_reference_text, extract_media_composition,
+                               extract_media_composition_whole_text, get_bacdive_carbon_source_growth)
 
 ROOT = Path(__file__).resolve().parents[1]
-GROUND_TRUTH_PATH = ROOT / "data" / "media_ground_truth.json"
+RESULTS_PATH = ROOT / "data" / "eval_media_results.json"
+N_PAPERS = 5
+SEED = 7  # fixed so the "random" sampling is reproducible
+ID_RANGE = (1, 179500)  # BacDive-IDs are sparse above this; see examples/my_tools.py
+MIN_TEXT_LEN = 2000  # long enough to be worth handing a judge, not an abstract stub
+# Accept PMC full text or an actual PDF; reject a plain HTML landing-page fetch (see
+# module docstring).
+ACCEPTABLE_TEXT_SOURCES = {"pubmed_central", "pdf"}
 
-# A real, fully open-access species-description paper -- the kind save_carbon_source_media_records
-# resolves a BacDive reference to via get_pubmed_reference_text (PMC full text is the pipeline's
-# first choice, tried before Crossref/Unpaywall/direct-fetch) -- with a concrete growth-medium
-# recipe (ISP agars, NaCl/pH/temperature ranges, a carbon-source test medium with 0.01% w/v yeast
-# extract) that's easy to read and check by eye at the PMC link below.
-CITATION = {
-    "doi": "10.3389/fmicb.2018.01587",
-    "pmcid": "PMC6058180",
-    "title": "Streptomyces nigra sp. nov. Is a Novel Actinobacterium Isolated From Mangrove "
-             "Soil and Exerts a Potent Antitumor Activity in Vitro",
-    "pmc_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6058180/",
-}
-
-
-def fetch_citation_text() -> str:
-    """The text both extraction methods run on, fetched the same way the real pipeline does:
-    get_pubmed_reference_text pulls this DOI's full text straight from PubMed Central -- no
-    Unpaywall/UNPAYWALL_EMAIL needed, since this paper is openly deposited there."""
-    result = get_pubmed_reference_text(CITATION["doi"])
-    text = result.get("text") or ""
-    if not text:
-        raise RuntimeError(f"get_pubmed_reference_text({CITATION['doi']!r}) returned no text: "
-                           f"{result.get('status')}")
-    return text
-
-
-def _flatten_ingredients(media: list[dict]) -> dict[str, str | None]:
-    """{ingredient name (lowercase): amount} across every medium an extraction found."""
-    out = {}
-    for m in media or []:
-        for ing in (m.get("ingredients") or []):
-            name = str(ing.get("name", "")).strip().lower()
-            if name:
-                out[name] = ing.get("amount")
-    return out
-
-
-def score_media(predicted: list[dict], ground_truth: list[dict]) -> dict:
-    gt, pred = _flatten_ingredients(ground_truth), _flatten_ingredients(predicted)
-    matched = set(gt) & set(pred)
-    amount_matches = sum(1 for k in matched if str(pred[k]).strip().lower() == str(gt[k]).strip().lower())
-    return {
-        "n_ground_truth_ingredients": len(gt), "n_predicted_ingredients": len(pred),
-        "n_matched_names": len(matched),
-        "ingredient_recall": round(len(matched) / len(gt), 3) if gt else None,
-        "amount_exact_match_on_matched": round(amount_matches / len(matched), 3) if matched else None,
-    }
+JUDGE_MODEL_IDS = {"anthropic": "claude-opus-5", "openrouter": "anthropic/claude-opus-5"}
+METHODS = {"whole_text": extract_media_composition_whole_text,
+          "retrieval": extract_media_composition}
 
 
 def run_method(name: str, fn, text: str) -> dict:
@@ -80,58 +59,119 @@ def run_method(name: str, fn, text: str) -> dict:
     try:
         result = fn(text, usage_log=usage_log)
     except ToolError as e:
-        result, usage_log = {"found": False, "media": [], "error": str(e)}, usage_log
+        result = {"found": False, "media": [], "error": str(e)}
     tokens_in = sum(u["input_tokens"] for u in usage_log)
     tokens_out = sum(u["output_tokens"] for u in usage_log)
-    return {"method": name, "n_llm_calls": len(usage_log), "input_tokens": tokens_in,
-            "output_tokens": tokens_out, "total_tokens": tokens_in + tokens_out,
+    return {"method": name, "input_tokens": tokens_in, "output_tokens": tokens_out,
             "found": result.get("found", False), "media": result.get("media", []),
-            "attempts": result.get("attempts")}
+            "attempts": result.get("attempts"), "error": result.get("error")}
+
+
+def _candidate_references(seed: int, id_range: tuple[int, int]):
+    """Yield one dict per candidate for random BacDive-IDs (reproducibly, given `seed`)
+    whose first carbon-source reference resolves to real text from PMC or a PDF -- no
+    filtering on what that reference actually is. Runs forever; the caller decides when
+    it has enough.
+
+    Skips papers already yielded, keyed on doi/url rather than ref_id: BacDive gives
+    each strain record its own reference @id even when several point at the identical
+    paper (one widely-cited bulk-annotation paper turns up again and again this way),
+    and the caller pays real extraction-model calls per candidate, so the same paper
+    must not come back under a different @id."""
+    rng = random.Random(seed)
+    lo, hi = id_range
+    tried, seen_papers = set(), set()
+    while True:
+        bid = rng.randint(lo, hi)
+        if bid in tried:
+            continue
+        tried.add(bid)
+        try:
+            tests = get_bacdive_carbon_source_growth(bid)["tests"]
+        except ToolError:
+            continue  # invalid id, or no carbon-source data -- try another
+        if not tests:
+            continue
+        record = _fetch_bacdive_record(bid)
+        ref_id = tests[0]["ref"]
+        try:
+            text, provenance = _resolve_reference_text(bid, record, ref_id)
+        except ToolError:
+            continue
+        if provenance["text_source"] not in ACCEPTABLE_TEXT_SOURCES or len(text) < MIN_TEXT_LEN:
+            continue
+        paper_key = (provenance.get("doi_or_url") or "").strip().lower() or f"ref:{ref_id}"
+        if paper_key in seen_papers:
+            continue
+        seen_papers.add(paper_key)
+        yield {"bacdive_id": bid, "strain_name": _strain_name(record), "ref_id": ref_id,
+               "reference_title": provenance.get("reference_title"),
+               "doi_or_url": provenance.get("doi_or_url"), "text": text}
+
+
+def find_and_evaluate_papers(judge_model, n: int = N_PAPERS, seed: int = SEED,
+                            id_range: tuple[int, int] = ID_RANGE,
+                            out_path: Path = RESULTS_PATH) -> list[dict]:
+    """Sample candidate papers until `n` are found where the retrieval method actually
+    reports finding a medium -- confirming the paper genuinely has media info, not just
+    that it resolved -- then run both methods and judge each against the paper. Writes
+    `out_path` after every accepted paper."""
+    results = []
+    for cand in _candidate_references(seed, id_range):
+        text = cand["text"]
+        print(f"\n=== candidate: {cand['strain_name']} (bacdive_id {cand['bacdive_id']}), "
+             f"{cand['doi_or_url']} ({cand['reference_title']!r}) ===")
+        row = {k: v for k, v in cand.items() if k != "text"}
+        row["text_len"] = len(text)
+        for method_name, fn in METHODS.items():
+            print(f"  running {method_name}...")
+            row[method_name] = run_method(method_name, fn, text)
+        if not row["retrieval"]["found"]:
+            print("  retrieval method found no medium here -- doesn't have usable media "
+                 f"info, skipping (not counted toward the {n})")
+            continue
+        for method_name in METHODS:
+            print(f"  judging {method_name}...")
+            score = judge_media_extraction(judge_model, cand["strain_name"], EXTRACTION_SYSTEM,
+                                           text, {"found": row[method_name]["found"],
+                                                  "media": row[method_name]["media"]})
+            row[method_name]["score"] = score
+        results.append(row)
+        out_path.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(f"  accepted ({len(results)}/{n})")
+        if len(results) >= n:
+            break
+    return results
+
+
+def print_summary(results: list[dict]) -> None:
+    header = f"{'strain':<35}{'method':<12}{'accuracy':>10}{'tokens':>9}{'found':>7}"
+    print(header)
+    print("-" * len(header))
+    for row in results:
+        for method_name in METHODS:
+            m = row[method_name]
+            acc = m["score"].get("accuracy")
+            acc_str = "-" if acc is None else f"{acc:.2f}"
+            tokens = m["input_tokens"] + m["output_tokens"]
+            print(f"{row['strain_name'][:34]:<35}{method_name:<12}{acc_str:>10}{tokens:>9}{str(m['found']):>7}")
 
 
 def main() -> None:
     load_env()
-    text = fetch_citation_text()
-    print(f"citation: {CITATION['title']}")
-    print(f"doi: {CITATION['doi']}  |  fetched text: {len(text)} chars\n")
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--n", type=int, default=N_PAPERS)
+    parser.add_argument("--seed", type=int, default=SEED)
+    parser.add_argument("--out", default=str(RESULTS_PATH))
+    parser.add_argument("--provider", choices=["openrouter", "anthropic"],
+                        default="openrouter" if os.environ.get("OPENROUTER_API_KEY") else "anthropic")
+    args = parser.parse_args()
 
-    outcomes = [
-        run_method("whole_text", extract_media_composition_whole_text, text),
-        run_method("retrieval", extract_media_composition, text),
-    ]
+    judge_model = make_model(args.provider, JUDGE_MODEL_IDS[args.provider])
+    results = find_and_evaluate_papers(judge_model, n=args.n, seed=args.seed, out_path=Path(args.out))
 
-    ground_truth = None
-    if GROUND_TRUTH_PATH.exists():
-        gt = json.loads(GROUND_TRUTH_PATH.read_text(encoding="utf-8"))
-        if gt.get("media"):
-            ground_truth = gt["media"]
-
-    for outcome in outcomes:
-        if ground_truth is not None:
-            outcome["score"] = score_media(outcome["media"], ground_truth)
-
-    print(f"{'method':<12}{'llm_calls':>11}{'in_tok':>9}{'out_tok':>9}{'total_tok':>11}{'found':>8}", end="")
-    print(f"{'recall':>9}{'amt_match':>11}" if ground_truth is not None else "")
-    for o in outcomes:
-        row = f"{o['method']:<12}{o['n_llm_calls']:>11}{o['input_tokens']:>9}{o['output_tokens']:>9}" \
-              f"{o['total_tokens']:>11}{str(o['found']):>8}"
-        if ground_truth is not None:
-            s = o["score"]
-            recall_str = "-" if s["ingredient_recall"] is None else format(s["ingredient_recall"], ".2f")
-            amt_str = ("-" if s["amount_exact_match_on_matched"] is None
-                      else format(s["amount_exact_match_on_matched"], ".2f"))
-            row += f"{recall_str:>9}{amt_str:>11}"
-        print(row)
-
-    print()
-    for o in outcomes:
-        print(f"--- {o['method']} extracted ---")
-        print(json.dumps(o["media"], indent=2))
-        print()
-
-    if ground_truth is None:
-        print(f"No ground truth yet -- fill in {GROUND_TRUTH_PATH} (scaffold already "
-              "written with the real excerpt) and re-run to see accuracy scores too.")
+    print(f"\nwrote {args.out}\n")
+    print_summary(results)
 
 
 if __name__ == "__main__":

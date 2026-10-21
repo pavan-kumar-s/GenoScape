@@ -1,0 +1,212 @@
+============================== SYSTEM PROMPT ==============================
+You are grading whether an automated growth-medium extraction correctly followed its own instructions. You will be given: the strain the paper concerns, the complete text of the scientific paper, the exact instructions the extraction model was given, and the JSON that model actually produced. Judge the output ONLY against what the paper's text itself actually states -- never your own outside knowledge of this organism or medium. Score it on: (1) did it correctly report whether the paper states a medium's composition at all; (2) if it reported one, does every ingredient/amount/temperature/pH it gives match what the paper actually says, with nothing invented and nothing the paper states left out. Respond with ONLY a JSON object, no other text and no markdown fences: {"accuracy": <float between 0 and 1>, "reason": "<one sentence, citing specifics>"}.
+
+============================== USER MESSAGE ==============================
+Strain: Cryobacterium arcticum SK1
+
+Extraction instructions given to the model:
+You read a short excerpt from a scientific paper and decide whether it describes a culture medium's composition. Report only what the excerpt actually states -- never guess, infer a textbook default, or fill in a gap, and never use outside knowledge: if the medium is only named here but its composition is given elsewhere (not in this excerpt), that still counts as not found. Respond with ONLY a JSON object, no other text and no markdown fences, matching exactly this shape:
+{"found": bool, "media": [{"name": string|null, "ingredients": [{"name": string, "amount": string|null}], "temperature": string|null, "ph": string|null, "notes": string|null}]}
+If this excerpt does not itself give a medium's composition, return {"found": false, "media": []}.
+
+Complete paper text:
+Compendium of Actinobacteria from Dr. Joachim M. Wink 
+University of Braunschweig 
+ 
+ 
+Copyright PD Dr. Joachim M. Wink, HZI – Helmholtz Zentrum für Infektionsforschung GmbH, 
+Inhoffenstrasse 7, 38124 Braunschweig, Mail: joachim.wink@helmholtz-hzi.de 
+ 
+Strain  DSM 22823 
+Genus  Cryobacterium  
+Species  arcticum 
+Status   
+Risk group  L1 
+Type strain  SK1, NCCB 100316 
+Reference   
+Author  Bajerski, F., Ganzert, L., Mangelsdorf, 
+K., Lipski, A., Wagner, D.  
+Title  Cryobacterium arcticum sp. nov., a 
+psychrotolerant bacterium from an 
+Arctic soil. 
+Journal  Int J Syst Evol Microbiol 
+Volume  61 ( Pt 8 ) 
+Page  1849-1853 
+Year  2011 
+Morphology   
+Agar ISP 2 - growth/G good 
+Agar ISP 2 - colony color/R lemon yellow (1012) / ivory (1014) 
+Agar ISP 2 - aerial mycelium/A none 
+Agar ISP 2 - soluble pigment/S none 
+Agar ISP 3 - G decreased 
+Agar ISP 3 - R light ivory (1015) 
+Agar ISP 3 - A none 
+Agar ISP 3 - S none 
+Agar ISP 4 - G decreased 
+Agar ISP 4 - R zinc yellow (1018) 
+Agar ISP 4 - A none 
+Agar ISP 4 - S none 
+Agar ISP 5 - G good 
+Agar ISP 5 - R zinc yellow (1018) 
+Agar ISP 5 - A none 
+Agar ISP 5 - S none 
+Agar ISP 6 - G good 
+Agar ISP 6 - R zinc yellow (1018) 
+Agar ISP 6 - A none 
+Agar ISP 6 - S none 
+Agar ISP 7 - G good 
+Agar ISP 7 - R zinc yellow (1018) 
+Agar ISP 7 - A none 
+Agar ISP 7 - S none 
+Agar suter with tyrosine - G good 
+Agar suter with tyrosine - R ivory (1014) 
+Agar suter with tyrosine - A none 
+Agar suter with tyrosine - S none 
+Compendium of Actinobacteria from Dr. Joachim M. Wink 
+University of Braunschweig 
+ 
+ 
+Copyright PD Dr. Joachim M. Wink, HZI – Helmholtz Zentrum für Infektionsforschung GmbH, 
+Inhoffenstrasse 7, 38124 Braunschweig, Mail: joachim.wink@helmholtz-hzi.de 
+ 
+Agar suter without tyrosine - G good 
+Agar suter without tyrosine - R zinc yellow (1018) 
+Agar suter without tyrosine - A none 
+Agar suter without tyrosine - S none 
+ Sporechains/Sporangia  
+Physiology   
+Melanin  (+) 
+pH range  
+pH optimum  
+temperature range  
+temperature optimum  
+sodium chloride tolerance  5% 
+lysozyme tolerance   
+use of carbohydrates glucose + 
+use of carbohydrates arabinose + 
+use of carbohydrates sucrose + 
+use of carbohydrates xylose + 
+use of carbohydrates inositol - 
+use of carbohydrates mannose + 
+use of carbohydrates fructose + 
+use of carbohydrates rhamnose + 
+use of carbohydrates raffinose + 
+use of carbohydrates cellulose - 
+Api zym Phosphatase alcaline 0 
+Api zym Esterase (C4) 1 
+Api zym Esterase Lipase (C8) 2 
+Api zym Lipase (C14) 0 
+Api zym Leucin arylamidase 5 
+Api zym Valine arylamidase 2 
+Api zym Cystine arylamidase 1 
+Api zym Trypsin 2 
+Api zym Chymotrypsin 0 
+Api zym Phosphatase acid 0 
+Api zym Naphtol-AS-BI-phosphohydrolase 1 
+Api zym alpha galactosidase 5 
+Api zym beta galactosidase 4 
+Api zym beta glucuronidase 0 
+Api zym alpha glucosidase 4 
+Api zym beta GLUCOSIDASE 5 
+Api zym N-acetyl-beta-glucoseamidase 0 
+Api zym alpha mannosidase 3 
+Api zym alpha fucosidase 0 
+Api coryne nitrate reduction - 
+Api coryne Pyraziamidase - 
+Compendium of Actinobacteria from Dr. Joachim M. Wink 
+University of Braunschweig 
+ 
+ 
+Copyright PD Dr. Joachim M. Wink, HZI – Helmholtz Zentrum für Infektionsforschung GmbH, 
+Inhoffenstrasse 7, 38124 Braunschweig, Mail: joachim.wink@helmholtz-hzi.de 
+ 
+Api coryne Pyrrolidonyl arylamidase - 
+Api coryne Alkaline phosphatase - 
+Api coryne beta glucuronidase - 
+Api coryne beta galactosidase + 
+Api coryne alpha glucosidase + 
+Api coryne N-acetyl -beta glucoseamidase - 
+Api coryne Esculin (beta glucosidase) + 
+Api coryne Urease (+) 
+Api coryne Gelatine(hydrolysis) - 
+Api coryne Glucose fermentation + 
+Api coryne Ribose fermentation - 
+Api coryne Xylose fermentation - 
+Api coryne Mannitol fermentation (+) 
+Api coryne Maltose fermentation + 
+Api coryne Lactose fermentation - 
+Api coryne Sucrose fermentation + 
+Api coryne Glycogen fermentation - 
+ 
+Apicoryne 
+ 
+ 
+Apizym 
+ 
+  
+
+Compendium of Actinobacteria from Dr. Joachim M. Wink 
+University of Braunschweig 
+ 
+ 
+Copyright PD Dr. Joachim M. Wink, HZI – Helmholtz Zentrum für Infektionsforschung GmbH, 
+Inhoffenstrasse 7, 38124 Braunschweig, Mail: joachim.wink@helmholtz-hzi.de 
+ 
+Plates (GYM, ISP2, ISP3, ISP4, ISP5, ISP7) 
+ 
+ 
+ 
+ 
+  
+
+Compendium of Actinobacteria from Dr. Joachim M. Wink 
+University of Braunschweig 
+ 
+ 
+Copyright PD Dr. Joachim M. Wink, HZI – Helmholtz Zentrum für Infektionsforschung GmbH, 
+Inhoffenstrasse 7, 38124 Braunschweig, Mail: joachim.wink@helmholtz-hzi.de 
+ 
+(ISP6, SSM+T, SSM-T) 
+ 
+ 
+ 
+  
+
+Compendium of Actinobacteria from Dr. Joachim M. Wink 
+University of Braunschweig 
+ 
+ 
+Copyright PD Dr. Joachim M. Wink, HZI – Helmholtz Zentrum für Infektionsforschung GmbH, 
+Inhoffenstrasse 7, 38124 Braunschweig, Mail: joachim.wink@helmholtz-hzi.de 
+ 
+Carbon utilization test (from top left to bottom right: glucose, arabinose,  
+sucrose, xylose, inositol, mannose, fructose, rhamnose, raffinose, cellulose) 
+ 
+ 
+ 
+ 
+  
+
+Compendium of Actinobacteria from Dr. Joachim M. Wink 
+University of Braunschweig 
+ 
+ 
+Copyright PD Dr. Joachim M. Wink, HZI – Helmholtz Zentrum für Infektionsforschung GmbH, 
+Inhoffenstrasse 7, 38124 Braunschweig, Mail: joachim.wink@helmholtz-hzi.de 
+ 
+Sodium chloride tolerance test (from top left to bottom right: 0%, 2,5%, 5%, 
+7,5%, 10%)
+
+Model's extracted output:
+{
+  "found": true,
+  "media": [
+    {
+      "name": "Agar suter without tyrosine",
+      "ingredients": [],
+      "temperature": null,
+      "ph": null,
+      "notes": "Growth (G): good; Reverse (R): zinc yellow (1018); Aerial (A): none; Substrate (S): none"
+    }
+  ]
+}

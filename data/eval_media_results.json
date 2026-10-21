@@ -1,0 +1,82 @@
+[
+  {
+    "strain_name": "Streptomyces avicenniae 9-9",
+    "bacdive_id": 16460,
+    "ref_id": 29244,
+    "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+    "doi_or_url": "10.1128/mSphere.00237-17",
+    "text_len": 20000,
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 4533,
+      "output_tokens": 18,
+      "found": false,
+      "media": [],
+      "attempts": null,
+      "error": null,
+      "score": {
+        "accuracy": 1.0,
+        "reason": "The paper is a meta-analysis of IJSEM phenotype data and contains no medium composition whatsoever (only passing mentions of 'dilute medium' and agar autoclaving), so reporting found=false is correct.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 4215,
+      "output_tokens": 80,
+      "found": false,
+      "media": [],
+      "attempts": 5,
+      "error": null,
+      "score": {
+        "accuracy": 1.0,
+        "reason": "The paper is a meta-analysis of IJSEM phenotypic data and contains no medium composition for Streptomyces avicenniae 9-9 (or any strain), so returning found=false with an empty media list is correct.",
+        "raw_reply": null
+      }
+    }
+  },
+  {
+    "strain_name": "Cryobacterium arcticum SK1",
+    "bacdive_id": 7305,
+    "ref_id": 69226,
+    "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+    "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2022823.pdf",
+    "text_len": 5254,
+    "whole_text": {
+      "method": "whole_text",
+      "input_tokens": 2535,
+      "output_tokens": 13,
+      "found": false,
+      "media": [],
+      "attempts": null,
+      "error": null,
+      "score": {
+        "accuracy": 1.0,
+        "reason": "The paper only names media (ISP 2-7, GYM, Suter/SSM) without giving any compositions, so the model's 'found: false' is correct.",
+        "raw_reply": null
+      }
+    },
+    "retrieval": {
+      "method": "retrieval",
+      "input_tokens": 1209,
+      "output_tokens": 99,
+      "found": true,
+      "media": [
+        {
+          "name": "Agar suter without tyrosine",
+          "ingredients": [],
+          "temperature": null,
+          "ph": null,
+          "notes": "Growth (G): good; Reverse (R): zinc yellow (1018); Aerial (A): none; Substrate (S): none"
+        }
+      ],
+      "attempts": 2,
+      "error": null,
+      "score": {
+        "accuracy": 0.0,
+        "reason": "The paper only names media (ISP 2–7, Suter agar, GYM) without giving any composition, so the correct answer was {\"found\": false}; the model reported found=true with a medium having an empty ingredient list and only growth-observation notes.",
+        "raw_reply": null
+      }
+    }
+  }
+]

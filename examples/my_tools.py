@@ -585,12 +585,12 @@ def _slugify(text: str) -> str:
     return re.sub(r"_+", "_", re.sub(r"[^A-Za-z0-9]+", "_", text)).strip("_").lower() or "unknown"
 
 
-def _resolve_reference(bacdive_id: int, record: dict, ref_id: int) -> dict:
-    """Track down the text and media-composition candidates behind one reference: PMC
-    full text first, then Crossref/Unpaywall/direct fetch, then scan whatever text came
-    back for media lines. Call once per ref_id -- several carbon-source tests can share
-    the same reference, and the medium it describes doesn't depend on which metabolite
-    is being asked about."""
+def _resolve_reference_text(bacdive_id: int, record: dict, ref_id: int) -> tuple[str, dict]:
+    """Track down just the TEXT behind one reference -- no LLM call: PMC full text
+    first, then Crossref/Unpaywall/direct fetch. Returns (text, provenance); text is ""
+    if nothing resolved. Split out of _resolve_reference so callers that only need to
+    check whether a reference is readable (e.g. examples/eval_media.py's candidate
+    sampling) don't have to pay for an extraction call to find out."""
     refs = record.get("Reference") or []
     if isinstance(refs, dict):
         refs = [refs]
@@ -616,6 +616,16 @@ def _resolve_reference(bacdive_id: int, record: dict, ref_id: int) -> dict:
         fallback = get_bacdive_reference_text(bacdive_id, ref_id)
         if fallback.get("text"):
             text, provenance["text_source"] = fallback["text"], fallback.get("content_type", "web")
+    return text, provenance
+
+
+def _resolve_reference(bacdive_id: int, record: dict, ref_id: int) -> dict:
+    """Track down the text and media-composition candidates behind one reference: PMC
+    full text first, then Crossref/Unpaywall/direct fetch, then scan whatever text came
+    back for media lines. Call once per ref_id -- several carbon-source tests can share
+    the same reference, and the medium it describes doesn't depend on which metabolite
+    is being asked about."""
+    text, provenance = _resolve_reference_text(bacdive_id, record, ref_id)
 
     full_media = []
     if text:

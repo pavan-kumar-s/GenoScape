@@ -5,7 +5,7 @@ produces a set of JSON records pairing its genome, a carbon source, and
 whether it grows on it — with the exact growth medium pulled from the paper
 behind that result, where available.
 
-<img src="docs/pipeline.png" width="500" alt="GenoScape pipeline">
+<img src="docs/pipeline.png" width="900" alt="GenoScape pipeline">
 
 
 ## 1. Install

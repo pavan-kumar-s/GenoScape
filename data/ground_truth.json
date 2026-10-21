@@ -1,0 +1,697 @@
+[
+  {
+    "bacdive_id": 167622,
+    "strain_name": "Novosphingobium umbonatum FSY-9",
+    "ncbi_id": "1908524",
+    "genome": "GCA_004005905",
+    "genome_link": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_004005905/",
+    "carbon_sources": [
+      {
+        "carbon_source": "D-galactose",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "D-glucose",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "D-mannose",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "dextrin",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-arabinose",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-aspartate",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-glutamate",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-histidine",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-leucine",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-proline",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-rhamnose",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-serine",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "ornithine",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "trehalose",
+        "growth": false,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "cellobiose",
+        "growth": true,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "D-fructose",
+        "growth": true,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "L-asparagine",
+        "growth": true,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "maltose",
+        "growth": true,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "raffinose",
+        "growth": true,
+        "ref": 69576
+      },
+      {
+        "carbon_source": "sucrose",
+        "growth": true,
+        "ref": 69576
+      }
+    ]
+  },
+  {
+    "bacdive_id": 132476,
+    "strain_name": "Streptomyces humi",
+    "ncbi_id": "1428620",
+    "genome": "GCA_001005085",
+    "genome_link": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_001005085/",
+    "carbon_sources": [
+      {
+        "carbon_source": "arabinose",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "cellulose",
+        "growth": false,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "fructose",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "glucose",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "myo-inositol",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "mannose",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "raffinose",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "rhamnose",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "sucrose",
+        "growth": true,
+        "ref": 69354
+      },
+      {
+        "carbon_source": "xylose",
+        "growth": true,
+        "ref": 69354
+      }
+    ]
+  },
+  {
+    "bacdive_id": 140569,
+    "strain_name": "Pontibacter aurantiacus NP1",
+    "ncbi_id": "1697944",
+    "genome": null,
+    "genome_link": null,
+    "carbon_sources": [
+      {
+        "carbon_source": "D-ribose",
+        "growth": false,
+        "ref": 43200
+      },
+      {
+        "carbon_source": "sorbose",
+        "growth": false,
+        "ref": 43200
+      }
+    ]
+  },
+  {
+    "bacdive_id": 166456,
+    "strain_name": "Pusillimonas thiosulfatoxidans YE3",
+    "ncbi_id": "2028345",
+    "genome": "GCA_004022565",
+    "genome_link": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_004022565/",
+    "carbon_sources": [
+      {
+        "carbon_source": "2-oxobutanoate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "acetoacetate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "glucuronamide",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-fucose",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "glycerol",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-alanine",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-glutamate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-pyroglutamate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "galactarate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "4-hydroxyphenylacetic acid",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "methyl pyruvate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "(S)-lactate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "2-oxoglutarate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-malate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-malate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "2-hydroxybutyrate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "3-hydroxybutyrate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "propionate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "acetate",
+        "growth": true,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "dextrin",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "tween 40",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "maltose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-trehalose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "cellobiose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "gentiobiose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "sucrose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "turanose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "stachyose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "raffinose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "alpha-lactose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "melibiose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "methyl beta-D-glucopyranoside",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "salicin",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "N-acetylglucosamine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "N-acetyl-D-mannosamine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "N-acetylgalactosamine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "n-acetylneuraminate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "alpha-D-glucose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-mannose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-fructose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-galactose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "3-O-methyl-D-glucose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-fucose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-rhamnose",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "inosine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-sorbitol",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-mannitol",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-arabitol",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "myo-inositol",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-glucose 6-phosphate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-fructose 6-phosphate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-aspartate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-serine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "gelatin",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "glycine-proline",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-arginine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-aspartate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-histidine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-serine",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "pectin",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-galacturonic acid",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "L-galactonic acid gamma-lactone",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-gluconate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-glucuronate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "quinate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "D-glucarate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "methyl (R)-lactate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "citrate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "bromosuccinate",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "gamma-aminobutyric acid",
+        "growth": false,
+        "ref": 67840
+      },
+      {
+        "carbon_source": "formate",
+        "growth": false,
+        "ref": 67840
+      }
+    ]
+  },
+  {
+    "bacdive_id": 17351,
+    "strain_name": "Vibrio owensii R-40496",
+    "ncbi_id": "1280004",
+    "genome": "GCA_000400325",
+    "genome_link": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_000400325/",
+    "carbon_sources": [
+      {
+        "carbon_source": "L-alaninamide",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "alanine",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "alpha-cyclodextrin",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "asparagine",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "aspartate",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "cellobiose",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "dextrin",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "fructose",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "gluconate",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "glucose",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "glutamate",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "glycerol",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "glycogen",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "inosine",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "lactate",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "maltose",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "mannitol",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "mannose",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "methyl pyruvate",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "N-acetylglucosamine",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "sucrose",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "threonine",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "thymidine",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "trehalose",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "tween 40",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "tween 80",
+        "growth": true,
+        "ref": 29735
+      },
+      {
+        "carbon_source": "uridine",
+        "growth": true,
+        "ref": 29735
+      }
+    ]
+  }
+]

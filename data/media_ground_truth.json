@@ -1,0 +1,16 @@
+{
+  "_instructions": "Fill in `media` below by hand, reading `_source_excerpts` (the actual text extracted from PubMed Central) or the paper itself at `_pmc_url`. Use the same shape extract_media_composition returns: a list of media, each with name, ingredients ([{name, amount}]), temperature, ph, notes. Delete this field and `_source_excerpts`/`_pmc_url` once done, or just leave them -- examples/eval_media.py only reads `media`.",
+  "_citation": {
+    "doi": "10.3389/fmicb.2018.01587",
+    "title": "Streptomyces nigra sp. nov. Is a Novel Actinobacterium Isolated From Mangrove Soil and Exerts a Potent Antitumor Activity in Vitro",
+    "pmcid": "PMC6058180"
+  },
+  "_pmc_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6058180/",
+  "_source_excerpts": [
+    "Growth of strain 452T was tested in the presence of various NaCl concentrations (0-15.0%, w/v, at 0.5% increments) in MB (pH 7.0). The growth temperature range was tested at 4, 10, 15, 20, 25, 28, 30, 35, 40, 45, and 50 degrees C in MB (pH 7.0). The growth pH range was determined at 0.5-pH unit intervals by supplementing MB with 30 mM buffering agents at 28 degrees C.",
+    "The culture characteristics were determined following growth on ISP 2, ISP 3, ISP 4, ISP 5, ISP 6, and ISP 7 agars (Shirling and Gottlieb, 1966); Streptomyces agar (Atlas, 2010), starch casein nitrate agar (Ser et al., 2016b), nutrient agar (Odds, 1981), potato-glucose agar (Wang et al., 2017), tryptone soya agar (Williams et al., 1983), and MA 2216 (Difco) for 14 days at 28 degrees C.",
+    "Degradation of tyrosine was determined on MA supplemented with 5 g/L tyrosine. Utilization of carbon substrates (0.5%, w/v) was tested according to the protocol of Dong and Cai (2001) using whole components of the inorganic salts of MB with yeast extract (0.01%, w/v) as growth factors.",
+    "Strain 452T was inoculated into a 500 mL Erlenmeyer flask containing 200 mL of tryptone soya liquid medium and incubated at 28 degrees C for 7 days on a rotary shaker at 150 rpm, as seed medium prior to the fermentation process. Then, 1% (v/v) of the starting inoculum was transferred into 1-L Erlenmeyer flasks containing 600 mL of MB, and the incubation was continued on a rotary shaker at 180 rpm at 30 degrees C for 10 days."
+  ],
+  "media": []
+}

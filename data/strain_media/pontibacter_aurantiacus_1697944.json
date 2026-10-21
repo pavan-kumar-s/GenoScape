@@ -1,0 +1,36 @@
+{
+  "strain_name": "Pontibacter aurantiacus",
+  "ncbi_id": "1697944",
+  "strain_id": 140569,
+  "genome": null,
+  "carbon_sources": [
+    {
+      "carbon_source": "D-ribose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 43200,
+        "reference_title": "Pontibacter aurantiacus sp. nov. isolated from hexachlorocyclohexane (HCH) contaminated soil",
+        "doi_or_url": "10.1099/ijsem.0.001833",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.001833",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "sorbose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 43200,
+        "reference_title": "Pontibacter aurantiacus sp. nov. isolated from hexachlorocyclohexane (HCH) contaminated soil",
+        "doi_or_url": "10.1099/ijsem.0.001833",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.001833",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    }
+  ]
+}

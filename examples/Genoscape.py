@@ -67,7 +67,7 @@ def main() -> None:
                                         "OpenRouter, claude-haiku-4.5 on Anthropic")
     parser.add_argument("--plan", action="store_true", help="add the update_plan tool (plan, act, reflect)")
     parser.add_argument("--max-steps", type=int, default=50)
-    parser.add_argument("--budget", type=int, default=200_000, help="stop after this many tokens")
+    parser.add_argument("--budget", type=int, default=1_000_000, help="stop after this many tokens")
     args = parser.parse_args()
     key = "OPENROUTER_API_KEY" if args.provider == "openrouter" else "ANTHROPIC_API_KEY"
     task = DEFAULT_TASK.format(prokaryote_name=args.prokaryote_name)

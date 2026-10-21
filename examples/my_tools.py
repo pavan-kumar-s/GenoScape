@@ -7,6 +7,7 @@ can act on when something goes wrong; it goes back to the model as a result.
 
 import json
 import re
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -26,24 +27,41 @@ UNPAYWALL_API = "https://api.unpaywall.org/v2"
 MEDIA_RECORDS_DIR = Path(__file__).resolve().parents[1] / "data" / "strain_media"
 
 
+NCBI_MAX_RETRIES = 3
+NCBI_RETRY_BACKOFF = 0.5  # seconds; doubles after each retry
+
+
 def _ncbi_get(endpoint: str, **params) -> str:
-    """GET one E-utilities endpoint, raw text. Raises ToolError on any failure."""
+    """GET one E-utilities endpoint, raw text. On a 429, sleeps and retries a few times
+    with exponential backoff before giving up -- NCBI's unauthenticated rate limit is
+    tight (about 3 requests/second shared with everyone else on your network), so a
+    single immediate retry often just hits another 429. This waits inside the tool call
+    itself rather than making the calling model notice the error and retry (which burns
+    a whole turn per attempt, and gives the model nothing useful to act on anyway).
+    Raises ToolError only once retries are exhausted, or on any other failure."""
     params = {"tool": "genoscape_agentbook", **params}
     if os.environ.get("NCBI_API_KEY"):
         params["api_key"] = os.environ["NCBI_API_KEY"]
     url = f"{NCBI_EUTILS}/{endpoint}.fcgi?{urllib.parse.urlencode(params)}"
-    try:
-        with urllib.request.urlopen(url, timeout=15) as resp:
-            return resp.read().decode("utf-8")
-    except urllib.error.HTTPError as e:
-        if e.code == 429:
-            raise ToolError("NCBI rate-limited this request (HTTP 429). Wait a moment and "
-                            "retry with fewer calls, or set an NCBI_API_KEY.") from e
-        raise ToolError(f"NCBI {endpoint} returned HTTP {e.code}. Check the organism name "
-                        "and retry.") from e
-    except urllib.error.URLError as e:
-        raise ToolError(f"Could not reach NCBI E-utilities ({e.reason}). Check network "
-                        "access and retry.") from e
+    delay = NCBI_RETRY_BACKOFF
+    for attempt in range(NCBI_MAX_RETRIES + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=15) as resp:
+                return resp.read().decode("utf-8")
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < NCBI_MAX_RETRIES:
+                time.sleep(delay)
+                delay *= 2
+                continue
+            if e.code == 429:
+                raise ToolError(f"NCBI rate-limited this request (HTTP 429) even after "
+                                f"{NCBI_MAX_RETRIES} retries. Set an NCBI_API_KEY in .env "
+                                "to raise the limit, or wait longer before retrying.") from e
+            raise ToolError(f"NCBI {endpoint} returned HTTP {e.code}. Check the organism name "
+                            "and retry.") from e
+        except urllib.error.URLError as e:
+            raise ToolError(f"Could not reach NCBI E-utilities ({e.reason}). Check network "
+                            "access and retry.") from e
 
 
 def _names(other_names: ET.Element | None, tag: str) -> list[str]:
@@ -253,7 +271,7 @@ def get_bacdive_carbon_source_growth(bacdive_id: int) -> dict:
         for e in entries if e.get("kind of utilization tested") in GROWTH_UTILIZATION_KINDS
     ]
     if not tests:
-        kinds_present = sorted({e.get("kind of utilization tested") for e in entries})
+        kinds_present = sorted({e.get("kind of utilization tested") or "(unspecified)" for e in entries})
         raise ToolError(f"BacDive-ID {bacdive_id} has no 'carbon source' or 'growth' "
                         f"utilization tests (only: {', '.join(kinds_present)}).")
     return {"bacdive_id": bacdive_id, "n_tests": len(tests), "tests": tests}
@@ -488,10 +506,15 @@ def _extraction_model():
                     "OPENROUTER_API_KEY or ANTHROPIC_API_KEY in .env.")
 
 
-def _ask_model_for_media(model, window: str) -> dict:
-    """One LLM call: does this excerpt describe a growth medium? If so, extract it."""
+def _ask_model_for_media(model, window: str, usage_log: list | None = None) -> dict:
+    """One LLM call: does this excerpt describe a growth medium? If so, extract it.
+    If `usage_log` is given, its token usage is appended to it (for comparing methods'
+    cost -- see examples/eval_media.py); callers that don't care can ignore this."""
     messages = [{"role": "user", "content": f"Excerpt from a paper:\n\n{window}"}]
     response = model.complete(EXTRACTION_SYSTEM, messages, tools=[], max_tokens=1200)
+    if usage_log is not None:
+        usage_log.append({"input_tokens": response.usage.input_tokens,
+                          "output_tokens": response.usage.output_tokens})
     raw = re.sub(r"^```(?:json)?\s*|\s*```\s*$", "", response.text.strip())
     try:
         return json.loads(raw)
@@ -499,7 +522,8 @@ def _ask_model_for_media(model, window: str) -> dict:
         raise ToolError(f"Extraction model did not return valid JSON: {raw[:300]}") from e
 
 
-def extract_media_composition(text: str, max_attempts: int = 5) -> dict:
+def extract_media_composition(text: str, max_attempts: int = 5,
+                              usage_log: list | None = None) -> dict:
     """Find the paragraph(s) most likely to describe culture-medium composition -- ranked
     by density of concentration/quantity units (%, g/l, mg/l, mM, ml, ...) -- pad each
     with the paragraph before and after it for context, and ask an LLM to verify and
@@ -519,12 +543,27 @@ def extract_media_composition(text: str, max_attempts: int = 5) -> dict:
     model = _extraction_model()
     result = {"found": False, "media": []}
     for attempt, window in enumerate(windows, start=1):
-        result = _ask_model_for_media(model, window)
+        result = _ask_model_for_media(model, window, usage_log)
         if result.get("found"):
             result["attempts"] = attempt
             return result
     result["attempts"] = len(windows)
     return result
+
+
+def extract_media_composition_whole_text(text: str, usage_log: list | None = None) -> dict:
+    """Upload the ENTIRE paper text to an LLM in a single call and ask it to extract
+    media composition -- the simpler alternative to extract_media_composition's
+    paragraph-retrieval approach. Kept here only for comparison (see
+    examples/eval_media.py); NOT registered as a tool, since extract_media_composition
+    is the one actually used by save_carbon_source_media_records. Uses far more input
+    tokens for a long paper, with no retry if the model misses the recipe on its first
+    read, but doesn't depend on the concentration-unit heuristic finding the right
+    paragraph at all."""
+    if not text.strip():
+        raise ToolError("No text to extract from.")
+    model = _extraction_model()
+    return _ask_model_for_media(model, text, usage_log)
 
 
 def _best_genome_accession(record: dict, ncbi_taxid: str | None = None) -> str | None:

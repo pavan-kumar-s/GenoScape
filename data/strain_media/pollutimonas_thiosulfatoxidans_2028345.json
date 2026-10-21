@@ -1,0 +1,1002 @@
+{
+  "strain_name": "Pollutimonas thiosulfatoxidans",
+  "ncbi_id": "2028345",
+  "strain_id": 166456,
+  "genome": "GCA_004022565",
+  "carbon_sources": [
+    {
+      "carbon_source": "2-oxobutanoate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "acetoacetate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "glucuronamide",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-fucose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "glycerol",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-alanine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-glutamate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-pyroglutamate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "galactarate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "4-hydroxyphenylacetic acid",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "methyl pyruvate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "(S)-lactate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "2-oxoglutarate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-malate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-malate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "2-hydroxybutyrate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "3-hydroxybutyrate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "propionate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "acetate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "dextrin",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "tween 40",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "maltose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-trehalose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "cellobiose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "gentiobiose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "sucrose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "turanose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "stachyose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "raffinose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "alpha-lactose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "melibiose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "methyl beta-D-glucopyranoside",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "salicin",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "N-acetylglucosamine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "N-acetyl-D-mannosamine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "N-acetylgalactosamine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "n-acetylneuraminate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "alpha-D-glucose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-mannose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-fructose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-galactose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "3-O-methyl-D-glucose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-fucose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-rhamnose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "inosine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-sorbitol",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-mannitol",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-arabitol",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "myo-inositol",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-glucose 6-phosphate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-fructose 6-phosphate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-aspartate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-serine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "gelatin",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "glycine-proline",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-arginine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-aspartate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-histidine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-serine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "pectin",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-galacturonic acid",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-galactonic acid gamma-lactone",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-gluconate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-glucuronate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "quinate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-glucarate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "methyl (R)-lactate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "citrate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "bromosuccinate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "gamma-aminobutyric acid",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "formate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 67840,
+        "reference_title": "Pusillimonas thiosulfatoxidans sp. nov., a thiosulfate oxidizer isolated from activated sludge",
+        "doi_or_url": "10.1099/ijsem.0.003266",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003266",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "strain_name": "Novosphingobium umbonatum FSY-9",
+  "ncbi_id": "1908524",
+  "strain_id": 167622,
+  "genome": "GCA_004005905",
+  "carbon_sources": [
+    {
+      "carbon_source": "D-galactose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-glucose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-mannose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "dextrin",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-arabinose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-aspartate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-glutamate",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-histidine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-leucine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-proline",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-rhamnose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-serine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "ornithine",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "trehalose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "cellobiose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "D-fructose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "L-asparagine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "maltose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "raffinose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    },
+    {
+      "carbon_source": "sucrose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69576,
+        "reference_title": "Novosphingobium umbonatum sp. nov., isolated from a freshwater mesocosm",
+        "doi_or_url": "10.1099/ijsem.0.003889",
+        "text_source": "none",
+        "doi": "10.1099/ijsem.0.003889",
+        "pubmed_status": "This DOI has no PMCID: the article is not deposited in PubMed Central, so its full text is not available this way.",
+        "media_extraction_status": "no text available to scan"
+      }
+    }
+  ]
+}

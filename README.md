@@ -12,7 +12,6 @@ behind that result, where available.
 
 ```bash
 pip install -r requirements.txt
-pip install pypdf   # optional, lets it read PDFs when a paper is only available as one
 ```
 
 ## 2. Add your keys
@@ -73,6 +72,28 @@ paper for each one:
 that result. It's left empty when the paper wasn't readable or didn't
 describe a medium — it's never guessed. Reading papers uses the same key you
 set up in step 2.
+
+## 5. Evaluate it (optional)
+
+Compare the full pipeline against a bare LLM with no tools, on a small set of
+strains with known answers (`data/ground_truth.json`):
+
+```bash
+python -m examples.eval
+```
+
+This runs 4 conditions (the pipeline and a bare LLM, each with Haiku and
+Sonnet), scores each answer with an LLM judge, and writes:
+
+- `data/eval_results.json` — every answer and its judged accuracy
+- `data/eval_plots/tokens.png` and `accuracy.png` — bar charts comparing all 4
+
+To re-draw those charts later without re-running anything (e.g. after editing
+`data/eval_results.json`, or to plot a subset of conditions):
+
+```bash
+python -m examples.plot_results --eval-results data/eval_results.json
+```
 
 ## Licence
 

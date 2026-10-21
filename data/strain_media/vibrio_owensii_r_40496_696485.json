@@ -1,0 +1,386 @@
+{
+  "strain_name": "Vibrio owensii R-40496",
+  "ncbi_id": "696485",
+  "strain_id": 17351,
+  "genome": "GCA_000400325",
+  "carbon_sources": [
+    {
+      "carbon_source": "L-alaninamide",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "alanine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "alpha-cyclodextrin",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "asparagine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "aspartate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "cellobiose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "dextrin",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "fructose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "gluconate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "glucose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "glutamate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "glycerol",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "glycogen",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "inosine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "lactate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "maltose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "mannitol",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "mannose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "methyl pyruvate",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "N-acetylglucosamine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "sucrose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "threonine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "thymidine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "trehalose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "tween 40",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "tween 80",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "uridine",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 29735,
+        "reference_title": "Hiding in Plain Sight: Mining Bacterial Species Records for Phenotypic Trait Information",
+        "doi_or_url": "10.1128/mSphere.00237-17",
+        "text_source": "pubmed_central",
+        "doi": "10.1128/mSphere.00237-17",
+        "pmcid": "PMC5541158",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    }
+  ]
+}

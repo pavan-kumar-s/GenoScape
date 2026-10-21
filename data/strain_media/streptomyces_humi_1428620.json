@@ -1,0 +1,128 @@
+{
+  "strain_name": "Streptomyces humi",
+  "ncbi_id": "1428620",
+  "strain_id": 132476,
+  "genome": "GCA_001005085",
+  "carbon_sources": [
+    {
+      "carbon_source": "arabinose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "cellulose",
+      "growth": false,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "fructose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "glucose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "myo-inositol",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "mannose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "raffinose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "rhamnose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "sucrose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    },
+    {
+      "carbon_source": "xylose",
+      "growth": true,
+      "full_media": [],
+      "provenance": {
+        "ref_id": 69354,
+        "reference_title": "Compendium of Actinobacteria. HZI-Helmholtz-Centre for Infection Research, Braunschweig",
+        "doi_or_url": "https://cdn.dsmz.de/wink/DSM%2042174.pdf",
+        "text_source": "pdf",
+        "media_extraction_status": "model found no medium described in the text"
+      }
+    }
+  ]
+}

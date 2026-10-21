@@ -3,3 +3,5 @@ jsonschema>=4.18   # brings referencing
 pytest
 openai             # OpenRouter (OpenAI-compatible) and OpenAI
 anthropic          # Anthropic API
+matplotlib         # bar plots in examples/eval.py
+pypdf              # extracting text from PDF references in my_tools._pdf_text

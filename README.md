@@ -40,23 +40,36 @@ looking the organism up, checking its known growth data, and reading papers.
 
 ## 4. Get your results
 
-Each result is saved as its own file under `data/strain_media/`, named after
-the strain and carbon source, e.g. `data/strain_media/4434_glucose.json`:
+Each organism gets one file under `data/strain_media/`, named after the
+strain and its NCBI ID, e.g. `data/strain_media/escherichia_coli_562.json`.
+It lists every carbon source tested, with the growth medium pulled from the
+paper for each one:
 
 ```json
 {
-  "carbon_source": "glucose",
-  "growth": true,
-  "genome": "GCA_900699165",
+  "strain_name": "Escherichia coli",
   "ncbi_id": "562",
   "strain_id": 4434,
-  "full_media": [],
-  "provenance": {"reference_title": "...", "doi": "..."}
+  "genome": "GCA_900699165",
+  "carbon_sources": [
+    {
+      "carbon_source": "glucose",
+      "growth": true,
+      "full_media": [
+        {"name": "GYC medium", "ingredients": [{"name": "glucose", "amount": "50 g/l"}],
+         "temperature": "28°C", "ph": "6.8", "notes": null}
+      ],
+      "provenance": {"reference_title": "...", "doi": "..."}
+    },
+    {"carbon_source": "citrate", "growth": false, "full_media": [], "provenance": {"...": "..."}}
+  ]
 }
 ```
 
-`full_media` lists the growth-medium details found in the paper. It's left
-empty when the paper didn't have that information — it's never guessed.
+`full_media` holds whatever a model found by reading the actual paper behind
+that result. It's left empty when the paper wasn't readable or didn't
+describe a medium — it's never guessed. Reading papers uses the same key you
+set up in step 2.
 
 ## Licence
 

@@ -1,0 +1,39 @@
+digraph GenoScape {
+    rankdir=TB;
+    bgcolor="white";
+    node [shape=box, style="rounded,filled", fillcolor="#eef3fb", color="#4a6fa5",
+          fontname="Helvetica", fontsize=12, margin="0.25,0.15"];
+    edge [fontname="Helvetica", fontsize=10, color="#555555"];
+
+    input   [label="Prokaryote name (input)\n\"Acetobacter cerevisiae\"", fillcolor="#f5f5f5", color="#888888"];
+    ncbi    [label="get_ncbi_strain_names\n→ NCBI taxonomy ID + name"];
+    bacdive [label="pick_top_bacdive_strain\n→ BacDive strain ID"];
+    carbon  [label="get_bacdive_carbon_source_growth\n→ carbon sources, growth +/-, reference id"];
+    save    [label="save_carbon_source_media_records\n→ one JSON file:\ndata/strain_media/<strain_name>_<ncbi_id>.json",
+              fillcolor="#e3f6e8", color="#3a8a53"];
+
+    input -> ncbi -> bacdive -> carbon;
+
+    subgraph cluster_ref {
+        label = "once per DISTINCT reference (not once per carbon source)";
+        style = "dashed";
+        fontsize = 11;
+        fontname = "Helvetica";
+        color = "#999999";
+
+        pmc      [label="get_pubmed_reference_text\n(PubMed Central)"];
+        decision [label="found in PMC?", shape=diamond, style=filled, fillcolor="#fff6d9",
+                  color="#c9a227", fontsize=11, margin="0.15,0.1"];
+        fallback [label="get_bacdive_reference_text\n(Crossref + Unpaywall +\ndirect fetch)"];
+        extract  [label="extract_media_composition\n1. rank paragraphs by units (g/l, mM, %, ml...)\n2. LLM verifies + extracts best candidate\n3. retries next-best if not found",
+                  fillcolor="#f0e8fa", color="#7a4fa5"];
+
+        pmc -> decision;
+        decision -> extract [label="yes"];
+        decision -> fallback [label="no"];
+        fallback -> extract;
+    }
+
+    carbon -> pmc;
+    extract -> save;
+}

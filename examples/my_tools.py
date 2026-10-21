@@ -260,11 +260,15 @@ def get_bacdive_carbon_source_growth(bacdive_id: int) -> dict:
 
 
 def _strip_html(html: str) -> str:
-    """Rough HTML -> text: drop script/style blocks and tags, unescape entities, collapse
-    whitespace. Not a real parser -- good enough to read prose, not tables or figures."""
+    """Rough HTML -> text: drop script/style blocks, turn block-level tags into paragraph
+    breaks (so paragraph-level chunking downstream has something to split on), strip the
+    rest, unescape entities, collapse whitespace. Not a real parser -- good enough to read
+    prose, not tables or figures."""
     html = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html)
+    html = re.sub(r"(?i)</?(p|div|br|li|tr|h[1-6])\b[^>]*>", "\n\n", html)
     text = unescape(re.sub(r"(?s)<[^>]+>", " ", html))
-    return re.sub(r"[ \t]+", " ", text).strip()
+    text = re.sub(r"[ \t]+", " ", text)
+    return re.sub(r"\n[ \t]*(?:\n[ \t]*)+", "\n\n", text).strip()
 
 
 def _fetch_json_quiet(url: str) -> dict | None:
@@ -334,7 +338,13 @@ def get_pubmed_reference_text(doi: str) -> dict:
     body = root.find(".//body")
     text = ""
     if body is not None:
-        text = re.sub(r"\s+", " ", " ".join(t.strip() for t in body.itertext() if t.strip())).strip()
+        # One paragraph per <p>, so paragraph-level chunking downstream has real breaks
+        # to split on -- joining the whole body's itertext() would flatten it to one blob.
+        paragraphs = [re.sub(r"\s+", " ", "".join(p.itertext())).strip()
+                      for p in body.iter() if p.tag == "p"]
+        text = "\n\n".join(p for p in paragraphs if p)
+        if not text:  # no <p> tags found (unusual structure): fall back to a flat join
+            text = re.sub(r"\s+", " ", " ".join(t.strip() for t in body.itertext() if t.strip())).strip()
     return {
         "doi": doi, "pmcid": ids["pmcid"], "pmid": ids.get("pmid"), "text": text[:20000],
         "status": "ok" if text else "PMCID found but its XML had no <body> text (front-matter-only stub).",
@@ -403,19 +413,65 @@ def get_bacdive_reference_text(bacdive_id: int, ref_id: int) -> dict:
 
 
 EXTRACTION_SYSTEM = (
-    "You extract culture-medium / growth-condition information from one scientific "
-    "paper's text. Report only what the text actually states -- never guess, infer a "
-    "textbook default, or fill in a gap. Respond with ONLY a JSON object, no other text "
-    "and no markdown fences, matching exactly this shape:\n"
+    "You read a short excerpt from a scientific paper and decide whether it describes a "
+    "culture medium's composition. Report only what the excerpt actually states -- never "
+    "guess, infer a textbook default, or fill in a gap, and never use outside knowledge: "
+    "if the medium is only named here but its composition is given elsewhere (not in this "
+    "excerpt), that still counts as not found. Respond with ONLY a JSON object, no other "
+    "text and no markdown fences, matching exactly this shape:\n"
     '{"found": bool, "media": [{"name": string|null, '
     '"ingredients": [{"name": string, "amount": string|null}], '
     '"temperature": string|null, "ph": string|null, "notes": string|null}]}\n'
-    'If the text does not describe a growth medium at all, return {"found": false, "media": []}.'
+    'If this excerpt does not itself give a medium\'s composition, return {"found": false, "media": []}.'
 )
+
+# Concentration/quantity units typical of a media recipe -- add more here if a source
+# keeps missing real recipes (e.g. uncommon unit spellings).
+CONCENTRATION_UNIT_RE = re.compile(
+    r"\b\d+(?:\.\d+)?\s?(?:%|[mkµu]?g/[mM]?[lL]|[mkµu]?g|[mµu]?mol(?:/[lL])?|[mµu]?M|[mµu]?[lL])"
+    r"(?![a-zA-Z])",  # not \b: '%' has no trailing word boundary before a space
+    re.IGNORECASE)
+MEDIA_CONTEXT_KEYWORDS = ("medium", "media", "broth", "agar", "peptone", "yeast extract",
+                          "buffer", "nacl", "glucose", "supplement", "autoclave", " ph ",
+                          "composition", "culture", "grown", "cultivat", "incubat")
+
+
+def _split_paragraphs(text: str) -> list[str]:
+    """Split on blank-line paragraph breaks; if none survived text extraction, treat the
+    whole thing as one paragraph rather than failing to find anything."""
+    paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+    return paras or ([text.strip()] if text.strip() else [])
+
+
+def _paragraph_score(para: str) -> int:
+    """Higher for more concentration/quantity units, plus a small bonus per media-related
+    keyword -- a paragraph dense in units (ml, mM, mg/l, g, %, ...) is the one most likely
+    to actually be a recipe, not just a paragraph that mentions a medium by name."""
+    units = len(CONCENTRATION_UNIT_RE.findall(para))
+    if units == 0:
+        return 0
+    return units * 2 + sum(k in para.lower() for k in MEDIA_CONTEXT_KEYWORDS)
+
+
+def _ranked_paragraph_windows(text: str, top_k: int) -> list[str]:
+    """The `top_k` paragraphs most likely to describe media composition, each padded
+    with the paragraph immediately before and after it for context, best first."""
+    paras = _split_paragraphs(text)
+    scored = sorted(range(len(paras)), key=lambda i: -_paragraph_score(paras[i]))
+    windows, seen = [], set()
+    for i in scored:
+        if _paragraph_score(paras[i]) <= 0 or len(windows) >= top_k:
+            break
+        lo, hi = max(0, i - 1), min(len(paras), i + 2)
+        if (lo, hi) in seen:
+            continue
+        seen.add((lo, hi))
+        windows.append("\n\n".join(paras[lo:hi]))
+    return windows
 
 
 def _extraction_model():
-    """The model used to read a paper and extract media details: OpenRouter if
+    """The model used to read an excerpt and extract media details: OpenRouter if
     OPENROUTER_API_KEY is set, otherwise Anthropic directly via ANTHROPIC_API_KEY.
     Raises ToolError if neither is set -- this step needs a real model, unlike every
     other tool in this file."""
@@ -428,30 +484,47 @@ def _extraction_model():
     if os.environ.get("ANTHROPIC_API_KEY"):
         from agentbook.models import AnthropicModel
         return AnthropicModel(model_name or "claude-haiku-4.5")
-    raise ToolError("extract_media_composition needs a model to read the paper text: set "
+    raise ToolError("extract_media_composition needs a model to read the excerpt: set "
                     "OPENROUTER_API_KEY or ANTHROPIC_API_KEY in .env.")
 
 
-def extract_media_composition(text: str) -> dict:
-    """Upload the whole paper text to an LLM and have it extract the culture-medium /
-    growth-condition details it actually states, as structured JSON: for each medium
-    described, its name, ingredients (name + amount), temperature, pH, and any other
-    notes. Call this ONCE per paper, not once per carbon source -- the same paper is
-    often the reference behind several carbon-source tests on the same strain, and its
-    medium doesn't change between them. Returns {"found": false, "media": []} if the
-    text doesn't describe a medium at all; raises ToolError if there's no model
-    configured, or if the model's reply isn't valid JSON."""
-    if not text.strip():
-        raise ToolError("No text to extract from.")
-    model = _extraction_model()
-    messages = [{"role": "user", "content": f"Paper text:\n\n{text}"}]
-    response = model.complete(EXTRACTION_SYSTEM, messages, tools=[], max_tokens=1500)
+def _ask_model_for_media(model, window: str) -> dict:
+    """One LLM call: does this excerpt describe a growth medium? If so, extract it."""
+    messages = [{"role": "user", "content": f"Excerpt from a paper:\n\n{window}"}]
+    response = model.complete(EXTRACTION_SYSTEM, messages, tools=[], max_tokens=1200)
     raw = re.sub(r"^```(?:json)?\s*|\s*```\s*$", "", response.text.strip())
     try:
-        parsed = json.loads(raw)
+        return json.loads(raw)
     except json.JSONDecodeError as e:
         raise ToolError(f"Extraction model did not return valid JSON: {raw[:300]}") from e
-    return parsed
+
+
+def extract_media_composition(text: str, max_attempts: int = 5) -> dict:
+    """Find the paragraph(s) most likely to describe culture-medium composition -- ranked
+    by density of concentration/quantity units (%, g/l, mg/l, mM, ml, ...) -- pad each
+    with the paragraph before and after it for context, and ask an LLM to verify and
+    extract from the best candidate. If the model reports nothing found there, try the
+    next-best candidate, and so on up to `max_attempts`, instead of uploading the whole
+    paper (cheaper, and the model isn't left to find a needle in a haystack). Call this
+    ONCE per paper, not once per carbon source -- the same paper is often the reference
+    behind several carbon-source tests on the same strain, and its medium doesn't change
+    between them. Returns {"found": false, "media": [], "attempts": n} if no candidate
+    panned out; raises ToolError if there's no model configured."""
+    if not text.strip():
+        raise ToolError("No text to extract from.")
+    windows = _ranked_paragraph_windows(text, top_k=max_attempts)
+    if not windows:
+        return {"found": False, "media": [], "attempts": 0,
+                "note": "No paragraph in this text had any concentration/quantity units."}
+    model = _extraction_model()
+    result = {"found": False, "media": []}
+    for attempt, window in enumerate(windows, start=1):
+        result = _ask_model_for_media(model, window)
+        if result.get("found"):
+            result["attempts"] = attempt
+            return result
+    result["attempts"] = len(windows)
+    return result
 
 
 def _best_genome_accession(record: dict, ncbi_taxid: str | None = None) -> str | None:
@@ -664,17 +737,22 @@ MY_TOOLS: list[Tool] = [
     ),
     Tool(
         "extract_media_composition",
-        "Upload the whole paper text (typically the `text` field from "
-        "get_bacdive_reference_text or get_pubmed_reference_text) to an LLM and have it "
-        "extract the culture-medium / growth-condition details it actually states, as "
-        "structured JSON: for each medium described, its name, ingredients (name + "
-        "amount), temperature, pH, and notes. Call this ONCE per paper, not once per "
-        "carbon source -- the same paper is often the reference for several "
-        "carbon-source tests on the same strain. Needs OPENROUTER_API_KEY or "
-        "ANTHROPIC_API_KEY set; returns {'found': false, 'media': []} if the text "
-        "doesn't describe a medium at all.",
+        "Find the paragraph(s) in paper text (typically the `text` field from "
+        "get_bacdive_reference_text or get_pubmed_reference_text) most likely to "
+        "describe culture-medium composition -- ranked by density of "
+        "concentration/quantity units (%, g/l, mg/l, mM, ml, ...) -- pad each with the "
+        "paragraph before and after it for context, and have an LLM verify and extract "
+        "from the best candidate; if nothing is found there, try the next-best "
+        "candidate, up to `max_attempts`. Cheaper and more reliable than uploading the "
+        "whole paper. Returns structured JSON: for each medium found, its name, "
+        "ingredients (name + amount), temperature, pH, and notes, plus how many "
+        "candidates were tried. Call this ONCE per paper, not once per carbon source -- "
+        "the same paper is often the reference for several carbon-source tests on the "
+        "same strain. Needs OPENROUTER_API_KEY or ANTHROPIC_API_KEY set; returns "
+        "{'found': false, 'media': []} if no candidate panned out.",
         {"type": "object", "properties": {
-            "text": {"type": "string"}},
+            "text": {"type": "string"},
+            "max_attempts": {"type": "integer", "minimum": 1, "maximum": 20, "default": 5}},
          "required": ["text"], "additionalProperties": False},
         extract_media_composition,
     ),
